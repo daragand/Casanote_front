@@ -1,0 +1,133 @@
+/* -----------------------------------------
+                    RESET
+-------------------------------------------*/
+@import url("./reset.css");
+
+/* -----------------------------------------
+                    VARIABLES
+-------------------------------------------*/
+:root {
+  --vert: #009c91;
+  --bleu: #3385d9;
+  --grisclair: #dedede;
+  --grisfonce: #668ba4;
+}
+
+.grid-global {
+  display: grid;
+  grid-template-columns: auto repeat(3, minmax(200px, 1fr));
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+  height: 100vh;
+}
+
+/* contenu des pages principales */
+.content {
+  grid-row: 2;
+  grid-column: 2/-1;
+  padding:2rem;
+}
+
+/* -----------------------------------------
+              Polices et titres
+-------------------------------------------*/
+
+/* -----------------------------------------
+                    ENTETES
+-------------------------------------------*/
+header {
+  background-color: var(--grisclair);
+  display: flex;
+  padding: 1rem;
+}
+
+#banner {
+  grid-column: 1 / -1;
+}
+
+.menu_entete {
+  margin-left: auto;
+  gap: 2rem;
+  display: flex;
+  text-align: center;
+  padding: 1rem;
+}
+
+.menu_entete:nth-child {
+  margin-left: auto;
+}
+
+.menu_entete img {
+  width: 3rem;
+}
+
+.logo_entete {
+  width: 20rem;
+  height: 10rem;
+  padding: 1rem;
+}
+
+/* -----------------------------------------
+                   Navigation
+-------------------------------------------*/
+
+#navigation {
+  background-color: var(--bleu);
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation_menu {
+  color: #fff;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  padding: 1rem 0 1rem 5rem;
+  font-size: 2.2rem;
+  background-position: left;
+  background-size: 3rem;
+  background-repeat: no-repeat;
+  background-position-x: 1rem;
+}
+
+/*animation menu */
+.navigation_menu:hover {
+  background-color: var(--vert);
+}
+
+.navigation_menu:active {
+  background-color: var(--vert);
+}
+
+/* -----------------------------------------
+            FORMULAIRES
+-------------------------------------------*/
+/* form{
+  display: flex;
+  flex-direction: column;
+}
+label{
+  font-size: 1rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+input {
+  background-color: var(--vert);
+  border: 1px solid #000;
+
+}
+#creationlogement{
+  background-color: var(--grisclair);
+  padding: 2rem;
+
+}
+ */
+/* -----------------------------------------
+                   PIED DE PAGE
+-------------------------------------------*/
+footer {
+  background-color: var(--bleu);
+  padding: 1.5rem;
+  text-align: center;
+  grid-row: -1;
+  grid-column: 1 / -1;
+}
