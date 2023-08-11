@@ -1,25 +1,27 @@
 
-
+import logoutimg from '../../Assets/Picto/option-de-deconnexion.png'
+import compteimg from '../../Assets/Picto/utilisateur.png'
+import notifimg from '../../Assets/Picto/notification.png'
 import {Link} from "react-router-dom"
 export default function Header() {
     return (
 
 <header role="banner" id="banner">
     <Link to="/"
-      id="accueil"><img class="logo_entete" src="../../../Images/logo/logo_projet carnet.png" alt=""
+      id="accueil"><img class="logo_entete" src="../../../Images/logo/logo_projet carnet.png" alt="maison en forme de C avec Casanote écrit dessus"
     /></Link>
         <nav class='menu_entete' role="menubar">
             
         
                 <Link to="/compte">
-                <img src="../../../images/Picto/utilisateur.png" alt="" />
+                <img src={compteimg} alt="silhouette d\'un buste de personnage" />
                 <p>Mon compte</p>
                 </Link>
                 <Link to="">
-                <img src="../../../images/Picto/notification.png" alt="" />
+                <img src={notifimg} alt="clochette jaune avec un point d'interrogation" />
                 </Link>
                 <Link to="">
-                <img src="../../../images/picto/option-de-deconnexion.png" alt="" />
+                <img src={logoutimg} alt="carré avec une flèche qui va sur la droite" />
                 <p>Deconnexion</p>
                 </Link>
             

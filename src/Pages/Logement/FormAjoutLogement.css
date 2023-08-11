@@ -1,0 +1,82 @@
+.step-indicator {
+    display: flex;
+    list-style-type: none;
+    justify-content: space-between;
+    padding: 0;
+    margin: 20px 0;
+    width:100%;
+  }
+  /* correspond aux titres pour les étapes */
+  .step-indicator li {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    position: relative;
+    padding:1rem;
+  }
+  /* correspond à la ligne de soulignement pour les étapes */
+  .step-indicator li:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: 95%;
+    left: -20%;
+    width: 100%;
+    height: 4px;
+    background-color: #ccc;
+    transform: translateY(-50%);
+  }
+  
+  
+  .step-indicator li.active {
+    color: #000;
+  }
+  
+  .step-indicator li.active::before {
+    background-color: #000;
+  }
+  
+  .step-content {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+  }
+  
+  .step-content.next {
+    animation-name: slideInNext;
+  }
+  
+  .step-content.prev {
+    animation-name: slideInPrev;
+  }
+  
+  @keyframes slideInNext {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInPrev {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  

@@ -1,14 +1,17 @@
 /* Ce CSS est à destination des formulaires d'inscription, de connexion. */
 .inscription {
-  body {
-    background-image: url("../../../public/Images/backgrounds/interieur.jpg");
+  background-image: url("../../../public/Images/backgrounds/interieur.jpg");
     background-size: cover;
+    height:100vh;
+  section {
+    margin-top:10%;
     text-align: center;
   }
 
   #connexion,
   #inscription,
   #creationlogement {
+    
     width: 70%;
     color: white;
     padding: 3rem;
@@ -24,8 +27,6 @@
     border-bottom: 1px rgba(40, 40, 40, 0.35) solid;
     border-right: 1px rgba(40, 40, 40, 0.35) solid;
     margin: 0 auto;
-  }
-
   .title {
     color: #eee;
     font-family: sans-serif;
@@ -140,4 +141,4 @@
   .formulaireok p {
     font-size: 3rem;
   }
-}
+  }}

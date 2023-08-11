@@ -1,10 +1,17 @@
 import {Link} from "react-router-dom"
+import { useState } from "react"
 
 
 export default function Dashbord() {
+    //récupération des données de l'utilisateur
+    const userData = localStorage.getItem("User");
+    const user = JSON.parse(userData);
+
+
     return (
 <main className="content">
-<h2>Votre Dashbord</h2>
+    
+{user ?<h2>Bienvenue {user.prenom} </h2>:null }
 
 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab facilis laudantium reprehenderit earum natus recusandae repellat! Nulla, quia doloribus dolore dignissimos odit optio nihil consectetur dolorum libero minima possimus vero! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos neque accusamus qui impedit corrupti! Doloribus, rem deserunt, magni quis fugit, iure facilis saepe aspernatur ut molestiae laborum provident nam temporibus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam quam harum voluptatum labore maxime! Quos vero est velit facere ipsum qui rerum, sed quae nobis voluptas dolores quidem tempore tenetur!</p>
 </main>
