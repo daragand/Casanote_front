@@ -4,11 +4,11 @@ import Navigation from "../Navigation/Navigation"
 import '../../Assets/Css/Style.css'
 import {Outlet} from 'react-router-dom'
 
-export default function Template() {
+export default function Template({ onSignOut }) {
     return (
 <main className="grid-global">
 
-<Header />
+<Header onSignOut={onSignOut} />
 <Navigation />
 <Outlet />
 <Footer />

@@ -6,20 +6,13 @@ import Cookies from "universal-cookie";
 import Swal from 'sweetalert2'
 const cookies = new Cookies();
 
-export default function Connexion() {
+export default function Connexion({ onSignIn }) {
   const connected=JSON.parse(localStorage.getItem("Connected"))
   const location = useLocation();
   const navigate = useNavigate();
 
 
-//vérifie si la personne est connecté au lancement de la page
-useEffect(() => {
-  if (connected) {
-    console.log('connected depuis connexion',connected)
-    // Je redirige vers le dashbord, dans l'éventualité d'un accès à la page de connexion en étant connecté
-    // navigate('/')
-  }
-}, []);
+
 
 
   const [nom, setNom] = useState('');
@@ -169,8 +162,11 @@ useEffect(() => {
     console.log(data);
     if (data.message === 'Connexion établie') {
       //je place quelques infos en local storage pour une exploitation de protection de page et un usage par la suite
-localStorage.setItem("User", JSON.stringify(data.user)); 
-localStorage.setItem("Connected",true)
+// localStorage.setItem("User", JSON.stringify(data.user)); 
+// localStorage.setItem("Connected",true)
+onSignIn(data.user);
+
+
 //une pop-up pour confirmer la création du compte
 Swal.fire({
   position: 'center',

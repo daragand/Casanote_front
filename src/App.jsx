@@ -17,19 +17,21 @@ const userConnected = JSON.parse(localStorage.getItem("Connected")) === true;
 function App() {
   const [isSignedIn, setIsSignedIn] = useState(userConnected);
 
+  // Fonction pour gérer la connexion de l'utilisateur
+  const handleSignIn = (user) => {
+    localStorage.setItem("User", JSON.stringify(user));
+    localStorage.setItem("Connected", true);
+    setIsSignedIn(true);
+  };
+//pour la deconnexion. placé en Props pour atteindre Template, puis Header
+  const handleSignOut = () => {
+    console.log('appel de la fonction sigOut de app')
+    localStorage.removeItem("User");
+    localStorage.removeItem("Connected");
+    setIsSignedIn(false);
+  };
   useEffect(() => {
-    console.log("user connected", userConnected);
-    console.log("verif isSigned depuis app.js", isSignedIn);
-    // je mets à jour isSignedIn en fonction du localStorage chaque fois que cela change.
-    const handleStorageChange = () => {
-      setIsSignedIn(userConnected);
-    };
-    //pour tenir compte de chaque changement de connected, je place un ecouteur sur le localStorage
-    window.addEventListener("storage", handleStorageChange);
-    //pour éviter tout conflit, je le supprime une fois la vérification effectuée.
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    setIsSignedIn(userConnected);
   }, []);
 
   return (
@@ -37,8 +39,8 @@ function App() {
       <LoadingProvider>
         <BrowserRouter>
           <Routes>
-            <Route exact path="/connexion" element={<Connexion />} />
-            <Route path="/" element={<Template />}>
+          <Route exact path="/connexion" element={<Connexion onSignIn={handleSignIn}  />} />
+            <Route path="/" element={<Template onSignOut={handleSignOut} />}>
               <Route exact path="/" element={<Dashbord />} />
               <Route
                 exact

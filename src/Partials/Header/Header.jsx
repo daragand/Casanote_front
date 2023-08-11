@@ -3,7 +3,9 @@ import logoutimg from '../../Assets/Picto/option-de-deconnexion.png'
 import compteimg from '../../Assets/Picto/utilisateur.png'
 import notifimg from '../../Assets/Picto/notification.png'
 import {Link} from "react-router-dom"
-export default function Header() {
+export default function Header({ onSignOut }) {
+
+  
     return (
 
 <header role="banner" id="banner">
@@ -20,7 +22,7 @@ export default function Header() {
                 <Link to="">
                 <img src={notifimg} alt="clochette jaune avec un point d'interrogation" />
                 </Link>
-                <Link to="">
+                <Link to="" onClick={onSignOut}>
                 <img src={logoutimg} alt="carré avec une flèche qui va sur la droite" />
                 <p>Deconnexion</p>
                 </Link>
