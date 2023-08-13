@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./FormAjoutLogement.css";
 import axios from "axios";
 import { useLoading } from "../../Partials/Loadingcontext";
+import Swal from 'sweetalert2'
+
 
 
 function LocalisationStep({ onNext }) {
@@ -32,7 +35,7 @@ function LocalisationStep({ onNext }) {
   const searchAdress = (address) => {
     setLoading(true);
     axios
-      .post("http://localhost:3002/logement/adresse", { address: address })
+      .post(`${process.env.REACT_APP_DOMAIN}logement/adresse`, { address: address },{ withCredentials: true })
       .then((response) => {
         const data = response.data;
         if (data.features && data.features.length > 0) {
@@ -336,6 +339,8 @@ function DateEntreeStep({ onValidate }) {
 
 export default function FormulaireLogement() {
   const [currentStep, setCurrentStep] = useState(1);
+
+ 
   const [typeLogement, setTypeLogement] = useState("");
   const [nomLogement, setNomLogement] = useState("");
   const [adresse, setAdresse] = useState("");
@@ -347,6 +352,7 @@ export default function FormulaireLogement() {
   const [surface, setSurface] = useState(0);
   const [chauffage, setChauffage] = useState("");
   const [dateEntree, setDateEntree] = useState();
+  const navigate = useNavigate()
 
   //récupération des données de l'étape adresse
   const handleNext = (suggestion) => {
@@ -379,6 +385,7 @@ export default function FormulaireLogement() {
 
   //envoi au back-end des infos globales du logement
   const handleValidate = (data) => {
+   
     const dataLogement = {
       type: typeLogement,
       //récupération de l'info date et nom avec data via handleValidate
@@ -395,8 +402,20 @@ export default function FormulaireLogement() {
     };
     console.log(dataLogement);
     axios
-      .post("http://localhost:3002/logement/ajout", { dataLogement })
-      .then((response) => console.log("Success: ", response))
+      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`, { dataLogement },{ withCredentials: true })
+      .then((res) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Connexion réussie',
+          showConfirmButton: false,
+          timer: 2500
+        }).then(() => {
+              // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
+            navigate('/logement')
+        })
+        console.log("Success: ", res)
+    })
       .catch((error) => console.log("Error: ", error));
   };
 

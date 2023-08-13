@@ -70,7 +70,7 @@ export default function Connexion({ onSignIn }) {
       formInscription.append('confirmation', confirmation);
       formInscription.append('email', email);
 
-      fetch('http://localhost:3002/users/inscription', {
+      fetch(`${process.env.REACT_APP_DOMAIN}users/inscription`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -146,7 +146,7 @@ export default function Connexion({ onSignIn }) {
     setErreursChamps(nouvellesErreurs);
     
     if (Object.keys(nouvellesErreurs).length === 0) {
-      fetch('http://localhost:3002/users/sign', {
+      fetch(`${process.env.REACT_APP_DOMAIN}users/sign`, {
         method: 'POST',
         credentials: 'include', // c'est l'équivalent de withCredentials: true pour axios
         headers: {
@@ -162,8 +162,6 @@ export default function Connexion({ onSignIn }) {
     console.log(data);
     if (data.message === 'Connexion établie') {
       //je place quelques infos en local storage pour une exploitation de protection de page et un usage par la suite
-// localStorage.setItem("User", JSON.stringify(data.user)); 
-// localStorage.setItem("Connected",true)
 onSignIn(data.user);
 
 

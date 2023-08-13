@@ -18,15 +18,13 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(userConnected);
 
   // Fonction pour gérer la connexion de l'utilisateur
-  const handleSignIn = (user) => {
-    localStorage.setItem("User", JSON.stringify(user));
+  const handleSignIn = () => {
     localStorage.setItem("Connected", true);
     setIsSignedIn(true);
   };
 //pour la deconnexion. placé en Props pour atteindre Template, puis Header
   const handleSignOut = () => {
     console.log('appel de la fonction sigOut de app')
-    localStorage.removeItem("User");
     localStorage.removeItem("Connected");
     setIsSignedIn(false);
   };

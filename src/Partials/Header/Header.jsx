@@ -10,9 +10,9 @@ export default function Header({ onSignOut }) {
 
 <header role="banner" id="banner">
     <Link to="/"
-      id="accueil"><img class="logo_entete" src="../../../Images/logo/logo_projet carnet.png" alt="maison en forme de C avec Casanote écrit dessus"
+      id="accueil"><img className="logo_entete" src="../../../Images/logo/logo_projet carnet.png" alt="maison en forme de C avec Casanote écrit dessus"
     /></Link>
-        <nav class='menu_entete' role="menubar">
+        <nav className='menu_entete' role="menubar">
             
         
                 <Link to="/compte">

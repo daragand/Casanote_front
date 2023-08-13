@@ -12,16 +12,11 @@ export default function ProtectedRoutes({ children,isSignedIn }) {
   const location = useLocation();
 
   useEffect(() => {
-    const user={
-        email:localStorage.getItem("userEmail"),
-        pseudo:localStorage.getItem("userPseudo")
-    }
-    if(isSignedIn){
-      setUserData(user)
-    } else {
-      setUserData(null);
-      localStorage.removeItem("UserEmail")
-      localStorage.removeItem("UserPseudo")
+    
+    if(!isSignedIn){
+      
+    localStorage.clear() 
+     
     }
    
   }, []);

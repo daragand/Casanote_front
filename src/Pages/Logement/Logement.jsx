@@ -4,15 +4,15 @@ import axios from "axios";
 import { useLoading } from "../../Partials/Loadingcontext";
 
 export default function Logement() {
-  const [logement, setLogement] = useState([]);
+  const [logements, setLogement] = useState([]);
   const [errorHouse, setErrorHouse] = useState([]);
-  const user=JSON.parse(localStorage.getItem("user"))
+ 
 const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(user);
+    
     axios
-      .post("http://localhost:3002/logement", { user })
+      .get(`${process.env.REACT_APP_DOMAIN}logement`)
       .then(res => res.data)
       .then(data => setLogement(data))
       .catch((error) => {
@@ -27,9 +27,9 @@ navigate('/logement/ajout')
   return (
     <main className="content">
       <button onClick={addHouse}>Ajouter un logement</button>
-      {logement.length > 0 ? logement.map((log, index) => (
+      {logements.length > 0 ? logements.map((log, index) => (
         <section key={index}>
-          <p>{log.description}</p>
+          <p>{log.logementId}</p>
         </section>
       )):(
         <section>

@@ -33,11 +33,11 @@
   /* Style et position du bouton de retractation du menu */
 .toggle_button{
     position:absolute;
-    margin-top:-10.2rem;
-color:#000;
-font-size:4rem;
-margin-bottom:1.3rem;
-margin-left:2rem;
-transition:0.5s;
+    margin-top:-7rem;
+    color:#000;
+    font-size:4rem;
+    margin-bottom:1.3rem;
+    margin-left:2rem;
+    transition:0.5s;
   }
   

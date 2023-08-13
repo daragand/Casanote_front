@@ -157,7 +157,7 @@ padding:1rem;
   margin-right:2rem;
 }
 /* gestion des boutons */
-button{
+button:not(.toggle_button){
   background-color: var(--bleu);
   border-radius: 16px;
   padding:1rem;
