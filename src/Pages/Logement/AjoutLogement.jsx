@@ -4,16 +4,16 @@ import "./FormAjoutLogement.css";
 import axios from "axios";
 import { useLoading } from "../../Partials/Loadingcontext";
 import Swal from 'sweetalert2'
+import ImageUploader from "../../Partials/Imagesuploader/ImageUploader";
+import ImagePreview from "../../Partials/Imagesuploader/ImageView";
 
-
-
-function LocalisationStep({ onNext }) {
+function LocalisationStep({ onNext, data }) {
   const { setLoading } = useLoading();
-  const [typeLogement, setTypeLogement] = useState("");
-  const [adresse, setAdresse] = useState("");
-  const [cp, setCp] = useState("");
-  const [ville, setVille] = useState("");
-  const [rue, setRue] = useState("");
+  const [typeLogement, setTypeLogement] = useState(data.typeLogement || "");
+  const [adresse, setAdresse] = useState(data.adresse || "");
+  const [cp, setCp] = useState(data.cp || "");
+  const [ville, setVille] = useState(data.ville || "");
+  const [rue, setRue] = useState(data.rue || "");
   const [suggestionsAdresses, setSuggestionsAdresses] = useState([]);
   const [searchActivated, setSearchActivated] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
@@ -181,10 +181,10 @@ function LocalisationStep({ onNext }) {
   );
 }
 
-function PiecesSurfaceStep({ onNext }) {
-  const [niveaux, setNiveaux] = useState(1);
-  const [pieces, setPieces] = useState(1);
-  const [surface, setSurface] = useState(0);
+function PiecesSurfaceStep({ onNext ,data}) {
+  const [niveaux, setNiveaux] = useState(data.niveaux || 1);
+  const [pieces, setPieces] = useState(data.pieces || 1);
+  const [surface, setSurface] = useState(data.surface || 0);
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -232,8 +232,8 @@ function PiecesSurfaceStep({ onNext }) {
   );
 }
 
-function ChauffageStep({ onNext }) {
-  const [chauffage, setChauffage] = useState("");
+function ChauffageStep({ onNext, data }) {
+  const [chauffage, setChauffage] = useState(data.chauffage || "");
   const [errorChauffage, seterrorChauffage] = useState(false);
   //gestion de l'étape suivante avec envoi de l'info chauffage
   const handleNext = (e) => {
@@ -300,15 +300,31 @@ function ChauffageStep({ onNext }) {
   );
 }
 
-function DateEntreeStep({ onValidate }) {
-  const [dateEntree, setDateEntree] = useState("");
-  const [nomLogement, setNomLogement] = useState("Logement principal");
+function DateEntreeStep({ onValidate, data }) {
+  const [dateEntree, setDateEntree] = useState(data.dateEntree || "");
+  const [nomLogement, setNomLogement] = useState(data.nomLogement || "Logement principal");
+const [imagesLogement, setImagesLogement]=useState([])
 
-  const handleValidate = (e) => {
-    e.preventDefault();
-    onValidate({ dateEntree, nomLogement });
-  };
+  
 
+
+// pour la récupération des images du logement
+const handleImagesSelected = (newImages) => {
+  setImagesLogement(prev => [...prev, ...newImages]);
+};
+
+const handleValidate = (e) => {
+  e.preventDefault();
+
+//gestion des images
+const images = new FormData();
+    for (let file of imagesLogement) {
+        images.append("imagesLogement", file);
+    }
+
+
+  onValidate({ dateEntree, nomLogement,images: imagesLogement });
+};
   return (
     <form>
       <label htmlFor="nomLogement">Nom attribué à votre logement :</label>
@@ -330,6 +346,10 @@ function DateEntreeStep({ onValidate }) {
       />
       <br />
       <br />
+      <label htmlFor="imagesLogement">Images de votre logement :</label>
+      <ImageUploader onImagesSelected={handleImagesSelected} />
+      <ImagePreview images={imagesLogement} />
+
       <button type="submit" onClick={handleValidate}>
         Valider
       </button>
@@ -340,74 +360,49 @@ function DateEntreeStep({ onValidate }) {
 export default function FormulaireLogement() {
   const [currentStep, setCurrentStep] = useState(1);
 
+  //création d'un objet pour récupérer les données du logement
+  const [formData, setFormData] = useState({
+    localisation: {},
+    piecesSurface: {},
+    chauffage: {},
+    dateEntree: {}
+  });
+
+  //fonction qui permet la récupération des données
+  const onNext = (data) => {
+    const newFormData = { ...formData };
+    if (currentStep === 1) newFormData.localisation = data;
+    if (currentStep === 2) newFormData.piecesSurface = data;
+    if (currentStep === 3) newFormData.chauffage = data;
+    if (currentStep === 4) newFormData.dateEntree = data;
+    setFormData(newFormData);
+    setCurrentStep(currentStep + 1);
+  };
  
-  const [typeLogement, setTypeLogement] = useState("");
-  const [nomLogement, setNomLogement] = useState("");
-  const [adresse, setAdresse] = useState("");
-  const [rue, setRue] = useState("");
-  const [cp, setCp] = useState("");
-  const [ville, setVille] = useState("");
-  const [niveaux, setNiveaux] = useState(0);
-  const [pieces, setPieces] = useState(0);
-  const [surface, setSurface] = useState(0);
-  const [chauffage, setChauffage] = useState("");
-  const [dateEntree, setDateEntree] = useState();
+
   const navigate = useNavigate()
 
-  //récupération des données de l'étape adresse
-  const handleNext = (suggestion) => {
-    setTypeLogement(suggestion.typeLogement);
-    setAdresse(suggestion.label);
-    setVille(suggestion.ville);
-    setCp(suggestion.cp);
-    setRue(suggestion.adresse);
-    setCurrentStep(currentStep + 1);
-  };
-  //récupération des données de l'étape info logement
-  const handleStepTwoNext = (data) => {
-    setNiveaux(data.niveaux);
-    setPieces(data.pieces);
-    setSurface(data.surface);
-    setCurrentStep(currentStep + 1);
-  };
-  //récupération des données de l'étape du type de logement
-  const handleStepThreeNext = (data) => {
-    setChauffage(data.chauffage);
-    setCurrentStep(currentStep + 1);
-  };
-  const handleStepFourNext = (data) => {
-    console.log(data);
-    setDateEntree(data.dateEntree);
-    setNomLogement(data.nomLogement);
-    //faute de récupérer les donnéées date entrée et nom logement correctement, je renvoie l'ensemble avec data
-    handleValidate(data);
-  };
-
   //envoi au back-end des infos globales du logement
-  const handleValidate = (data) => {
-   
-    const dataLogement = {
-      type: typeLogement,
-      //récupération de l'info date et nom avec data via handleValidate
-      nomLogement: data.nomLogement,
-      labelAdresse: adresse,
-      rue: rue,
-      cp: cp,
-      ville: ville,
-      nombre_pieces: pieces,
-      nombre_etages: niveaux,
-      surface_habitable: surface,
-      type_chauffage: chauffage,
-      dateEntree: data.dateEntree,
-    };
-    console.log(dataLogement);
+  const finalValidate = (data) => {
+    //récupération des éléments du formulaire en ajoutant les éléments de la dernière étape
+    const dataLogement = { ...formData, dateEntree: data.dateEntree, nomLogement: data.nomLogement, images: data.images};
+//concentration de l'objet avant envoi via formData
+const logement = new FormData();
+logement.append("data", JSON.stringify(dataLogement));
+data.images.forEach((image) => {
+  logement.append("imagesLogement", image); // Ajout des images
+});
+    console.log(logement)
+    
     axios
-      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`, { dataLogement },{ withCredentials: true })
+      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`,  
+        logement
+       ,{ withCredentials: true })
       .then((res) => {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: 'Connexion réussie',
+          title: 'Logement créé avec succès',
           showConfirmButton: false,
           timer: 2500
         }).then(() => {
@@ -428,10 +423,19 @@ export default function FormulaireLogement() {
         <li className={currentStep === 4 ? "active" : ""}>Date d'entrée</li>
       </ul>
 
-      {currentStep === 1 && <LocalisationStep onNext={handleNext} />}
-      {currentStep === 2 && <PiecesSurfaceStep onNext={handleStepTwoNext} />}
-      {currentStep === 3 && <ChauffageStep onNext={handleStepThreeNext} />}
-      {currentStep === 4 && <DateEntreeStep onValidate={handleStepFourNext} />}
+{/* boutons suivant en récupérant les données à chaque étape */}
+      {currentStep === 1 && <LocalisationStep onNext={onNext} data={formData.localisation} />}
+      {currentStep === 2 && <PiecesSurfaceStep onNext={onNext} data={formData.piecesSurface} />}
+      {currentStep === 3 && <ChauffageStep onNext={onNext} data={formData.chauffage} />}
+      {currentStep === 4 && <DateEntreeStep onValidate={finalValidate} data={formData.dateEntree} />}
+    
+      {/* Bouton 'précendent' à partir de la seconde étape */}
+      {currentStep > 1 && (
+        <button type="button" onClick={() => setCurrentStep(currentStep - 1)}>
+          Précédent
+        </button>
+      )}
+    
     </div>
   );
 }

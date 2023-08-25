@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { initAxiosInterceptors } from "./Partials/Auth/InterceptorAxios"
+import { AuthProvider,useAuth } from "./Partials/Auth/AuthContext"
 import { LoadingProvider } from "./Partials/Loadingcontext";
 import Template from "./Partials/Template/Template";
 import Logement from "./Pages/Logement/Logement";
@@ -11,40 +13,33 @@ import Compte from "./Pages/Compte/Compte";
 import Connexion from "./Pages/Inscription/Connexion";
 import FormulaireLogement from "./Pages/Logement/AjoutLogement";
 import ProtectedRoutes from "./Partials/Auth/ProtectedRoutes";
-import Cookies from "universal-cookie";
-const userConnected = JSON.parse(localStorage.getItem("Connected")) === true;
+import VerifCompte from "./Pages/Inscription/VerificationMail";
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(userConnected);
+  const {handleSignOut}  = useAuth();
 
-  // Fonction pour gérer la connexion de l'utilisateur
-  const handleSignIn = () => {
-    localStorage.setItem("Connected", true);
-    setIsSignedIn(true);
-  };
-//pour la deconnexion. placé en Props pour atteindre Template, puis Header
-  const handleSignOut = () => {
-    console.log('appel de la fonction sigOut de app')
-    localStorage.removeItem("Connected");
-    setIsSignedIn(false);
-  };
+ 
+ 
   useEffect(() => {
-    setIsSignedIn(userConnected);
-  }, []);
+    initAxiosInterceptors(handleSignOut);
+  }, [handleSignOut]);
+
 
   return (
     <main className="App">
       <LoadingProvider>
+          <AuthProvider>
         <BrowserRouter>
           <Routes>
-          <Route exact path="/connexion" element={<Connexion onSignIn={handleSignIn}  />} />
-            <Route path="/" element={<Template onSignOut={handleSignOut} />}>
+          <Route exact path="/connexion" element={<Connexion />} />
+          <Route exact path="/users/confirmInscription/:token/:email" element={<VerifCompte />} />
+            <Route path="/" element={<Template />}>
               <Route exact path="/" element={<Dashbord />} />
               <Route
                 exact
                 path="/logement"
                 element={
-                  <ProtectedRoutes isSignedIn={isSignedIn}>
+                  <ProtectedRoutes >
                     <Logement />
                   </ProtectedRoutes>
                 }
@@ -53,7 +48,7 @@ function App() {
                 exact
                 path="/pieces"
                 element={
-                  <ProtectedRoutes isSignedIn={isSignedIn}>
+                  <ProtectedRoutes >
                     <Pieces />
                   </ProtectedRoutes>
                 }
@@ -62,7 +57,7 @@ function App() {
                 exact
                 path="/travaux"
                 element={
-                  <ProtectedRoutes isSignedIn={isSignedIn}>
+                  <ProtectedRoutes >
                     <Travaux />
                   </ProtectedRoutes>
                 }
@@ -72,7 +67,7 @@ function App() {
                 exact
                 path="/compte"
                 element={
-                  <ProtectedRoutes isSignedIn={isSignedIn}>
+                  <ProtectedRoutes >
                     <Compte />
                   </ProtectedRoutes>
                 }
@@ -85,6 +80,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+            </AuthProvider>
       </LoadingProvider>
     </main>
   );

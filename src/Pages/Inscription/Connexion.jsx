@@ -1,135 +1,187 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './connexion_style.scss'
-import './style_formulaire.scss'
-import Cookies from "universal-cookie";
+// import './style_formulaire.scss'
+import { useAuth } from '../../Partials/Auth/AuthContext';
+import axios from "axios";
 import Swal from 'sweetalert2'
-const cookies = new Cookies();
 
-export default function Connexion({ onSignIn }) {
-  const connected=JSON.parse(localStorage.getItem("Connected"))
-  const location = useLocation();
+
+export default function Connexion() {
+ 
   const navigate = useNavigate();
+  const { handleSignIn,isSignedIn} = useAuth();
 
+  //renvoi d'un mail de vérification
+  function sendEmailAgain(email) {
+    console.log('email de send email again function',email)
+    axios.post(`${process.env.REACT_APP_DOMAIN}users/inscription/sendmailagain`,{email:email},{ withCredentials: true })
+    .then((res)=>{
+console.log('suite à la demande du mail',res)
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
 
+  //useEffect pour rediriger l'usager si déjà connecté
+  useEffect(() => {
+    if (isSignedIn) {  // Vérifiez la connexion de l'utilisateur. 
+      Swal.fire(
+        'Déjà connecté',
+        'Vous êtes déjà connecté. Vous allez être redirigé vers la page d\'accueil.',
+        'info'
+      ).then(() => {
+        navigate('/'); // Redirigez vers la page d'accueil ou toute autre page appropriée.
+      });
+    }
+  }, []);
+  //j'ai rétiré la dépendance à isSignedIn car le message se mettait au moment de la connexion
 
+  // création d'un objet pour récupérer les infos
+  const [inscription,setInscription] = useState({
+    nom:'',
+    prenom:'',
+    email:'',
+    login:'',
+    pwd:'',
+    confirmation:''
+  })
 
-
-  const [nom, setNom] = useState('');
-  const [prenom, setPrenom] = useState('');
-  const [email, setEmail] = useState('');
-  const [login, setLogin] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [confirmation, setConfirmation] = useState('');
-  const [email_connexion, setEmail_connexion] = useState('');
-  const [pwd_connexion, setPwd_connexion] = useState('');
-  const motifGen = /^([a-zA-Zéèàëïüûêöäôâ-]+)( [a-zA-Zéèàëïüûêöäôâ-]+)*$/;
-  const motifEmail = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-  const motifPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\];':"\\|,./?]).{8,}$/;
-  const motifLogin = /^[a-zA-Z0-9_-]{4,}$/;
+  //des Regex pour la vérifications en front
+ const motifs = {
+  Gen:/^([a-zA-Zéèàëïüûêöäôâ-]+)( [a-zA-Zéèàëïüûêöäôâ-]+)*$/,
+  Email:/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+  Password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\];':"\\|,./?]).{8,}$/,
+  Login: /^[a-zA-Z0-9_-]{4,}$/ 
+ }
+ const [infoConnexion, setInfoConnexion] = useState({
+  emailConnexion:'',
+  passwordConnexion:''
+ })
+  
   const nouvellesErreurs = {};
+  const nouvellesErreursConnexion = {};
   
 
   const [erreursChamps, setErreursChamps] = useState({});
-
+  const [erreursChampsConnexion, setErreursChampsConnexion] = useState({});
+  
+  
+//submit formulaire inscription
   const verifFormulaire = (e) => {
     e.preventDefault();
 
-    if (!motifGen.test(nom)) {
+    if (!motifs.Gen.test(inscription.nom)) {
       nouvellesErreurs['nom'] = "Votre nom ne doit contenir que des lettres";
     }
 
-    if (!motifGen.test(prenom)) {
+    if (!motifs.Gen.test(inscription.prenom)) {
       nouvellesErreurs['prenom'] = "Votre prénom ne doit contenir que des lettres";
     }
 
-    if (!motifEmail.test(email)) {
+    if (!motifs.Email.test(inscription.email)) {
       nouvellesErreurs['email'] = "Votre mail doit être dans le format monmail@domaine.fr";
     }
 
-    if (!motifLogin.test(login)) {
+    if (!motifs.Login.test(inscription.login)) {
       nouvellesErreurs['pseudo'] = "Votre pseudo ne doit contenir que des lettres";
     }
 
-    if (!motifPassword.test(pwd)) {
+    if (!motifs.Password.test(inscription.pwd)) {
       nouvellesErreurs['password'] = "Votre mot de passe doit disposer de minimum 8 caractères, dont 1 majuscule, 1 minuscule, 1 chiffre, et 1 caractère spécial";
     }
 
-    if (confirmation !== pwd) {
+    if (inscription.confirmation !== inscription.pwd) {
       nouvellesErreurs['confirmation'] = "Les mots de passe sont différents";
     }
 
     setErreursChamps(nouvellesErreurs);
 
     if (Object.keys(nouvellesErreurs).length === 0) {
-      const formInscription = new FormData();
-      formInscription.append('nom', nom);
-      formInscription.append('prenom', prenom);
-      formInscription.append('pseudo', login);
-      formInscription.append('password', pwd);
-      formInscription.append('confirmation', confirmation);
-      formInscription.append('email', email);
-
-      fetch(`${process.env.REACT_APP_DOMAIN}users/inscription`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams(formInscription).toString()
-      })
-        .then(response => response.json())
-        .then((data) => {
-          console.log(data);
-          if (data.message === 'Le membre a été créé avec succès.') {
-            setNom('')
-            setPrenom('')
-            setEmail('')
-            setLogin('')
-            setPwd('')
-            setConfirmation('')
+      axios
+      .post(`${process.env.REACT_APP_DOMAIN}users/inscription`, inscription,{ withCredentials: true })
+        .then((res) => {
+          
+          console.log('réponse inscription',res);
+          if (res.status === 200) {
+            setInscription({
+              nom:'',
+              prenom:'',
+            
+              login:'',
+              pwd:'',
+              confirmation:''
+          })
             Swal.fire({
               icon: 'success',
-              title: 'Bravo',
-              text: 'Votre compte a été bien été créé ',
-              footer: '<a href="/connexion">se connecter</a>'
+              title: 'Bravo... vérifiez vos emails',
+              text: 'Votre compte a été bien été créé. Controlez vos emails pour activer le compte ',
+              footer: '<a href="#" id="resendEmail">Renvoyer l\'email</a> | <a href="/connexion">Se connecter</a>'
             })
+            document.getElementById('resendEmail').addEventListener('click', function(e) {
+              e.preventDefault(); // Pour éviter que le lien ne navigue
+              sendEmailAgain(inscription.email);
+            });
           }
         })
         .catch(error => {
-          console.error('Erreur:', error);
+          const dataError = error.response
+          if (dataError && dataError.status) {
+              if(dataError.status === 400){
+            Swal.fire({
+              icon: 'error',
+              title: 'Email ou pseudo existant',
+              text: 'Veuillez choisir un nouvel email ou un autre pseudo ',
+            })
+            }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'ooops...',
+            text: 'une erreur est survenue. Merci de réitérer votre inscription ',
+            footer: '<a href="/connexion">se connecter</a>'
+          })
+          }
+        }
         });
     }
   };
 
+
+  //tentative de refactorisation de l'inscription au 16/08/2023 via destructuration
   const handleInputChange = (e) => {
-    const fieldName = e.target.name;
+    const { name, value } = e.target;
 
-    if (erreursChamps[fieldName]) {
-      setErreursChamps((precErreurs) => {
-        const newState = { ...precErreurs };
-        delete newState[fieldName];
-        return newState;
+    setInscription(prevState => ({
+        ...prevState,
+        [name]: value
+    }));
+    if (erreursChamps[name]) {
+      setErreursChamps(prevErreurs => {
+          const newState = { ...prevErreurs };
+          delete newState[name];
+          return newState;
       });
-    }
-
-    if (fieldName === 'nom') {
-      setNom(e.target.value);
-    } else if (fieldName === 'prenom') {
-      setPrenom(e.target.value);
-    } else if (fieldName === 'email') {
-      setEmail(e.target.value);
-    } else if (fieldName === 'pseudo') {
-      setLogin(e.target.value);
-    } else if (fieldName === 'password') {
-      setPwd(e.target.value);
-    } else if (fieldName === 'confirmation') {
-      setConfirmation(e.target.value);
-    } else if (fieldName === 'email-connexion') {
-      setEmail_connexion(e.target.value);
-    } else if (fieldName === 'password-connexion') {
-      setPwd_connexion(e.target.value);
-    }
+  }
   };
+
+   //tentative de refactorisation de la partie connexion au 16/08/2023 via destructuration
+   const signInInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setInfoConnexion(prevState => ({
+        ...prevState,
+        [name]: value
+    }));
+    if (erreursChampsConnexion[name]) {
+      setErreursChampsConnexion(prevErreurs => {
+          const newState = { ...prevErreurs };
+          delete newState[name];
+          return newState;
+      });
+      console.log(infoConnexion)
+  }
+  }
 
   const [afficherInscription, setAfficherInscription] = useState(true);
 
@@ -140,62 +192,83 @@ export default function Connexion({ onSignIn }) {
   const connexionFormulaire = (e) => {
     e.preventDefault();
 
-    if (!motifEmail.test(email_connexion)) {
-      nouvellesErreurs['email-connexion'] = "Votre mail doit être dans le format monmail@domaine.fr";
+    if (!motifs.Email.test(infoConnexion.emailConnexion)) {
+      nouvellesErreursConnexion['emailConnexion'] = "Votre mail doit être dans le format monmail@domaine.fr";
     }
-    setErreursChamps(nouvellesErreurs);
+    setErreursChampsConnexion(nouvellesErreurs);
     
     if (Object.keys(nouvellesErreurs).length === 0) {
-      fetch(`${process.env.REACT_APP_DOMAIN}users/sign`, {
-        method: 'POST',
-        credentials: 'include', // c'est l'équivalent de withCredentials: true pour axios
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email_connexion,
-          password: pwd_connexion
-        })
-          })
-          .then(response => response.json())
-  .then((data) => {
-    console.log(data);
-    if (data.message === 'Connexion établie') {
-      //je place quelques infos en local storage pour une exploitation de protection de page et un usage par la suite
-onSignIn(data.user);
+     
+      axios
+      .post(`${process.env.REACT_APP_DOMAIN}users/sign`, infoConnexion,{ withCredentials: true })
+          .then((data) => {
+            
+              if (data.status === 200) {
+              //j'utilise la fonction handleSignIn situé dans le context Auth.
+                handleSignIn()
 
-
-//une pop-up pour confirmer la création du compte
-Swal.fire({
-  position: 'center',
-  icon: 'success',
-  title: 'Connexion réussie',
-  showConfirmButton: false,
-  timer: 2500
-}).then(() => {
-      // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
-    navigate('/')
-})
+              //une pop-up pour confirmer la création du compte
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Connexion réussie',
+                showConfirmButton: false,
+                timer: 2500
+                })
+                    .then(() => {
+                          // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
+                        navigate('/')
+                    })
 }
-    //si mot de passe non reconnu
-    if(data.message=== "Mot de passe erroné"){
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'erreur de mot de passe !',
-        // footer: '<a href="">Why do I have this issue?</a>'
-      })
-    }
+    
   })
   .catch(error => {
-    console.error('Erreur lors de la connexion:', error);
+    
+    const dataError = error.response
+
+    //je m'assure que l'erreur existe et que la partie status soit défini
+    if (dataError && dataError.status) {
+//si mot de passe non reconnu
+        if(dataError.status === 412){
+  console.log('dataError')
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'erreur de mot de passe !',
+  })
+  //si email inexistant dans la base
+       } 
+         if(dataError.status=== 410){
+    Swal.fire({
+      icon: 'error',
+      title: 'Email inexistant',
+      text: 'merci de vérifier votre email ou de vous inscrire',
+    })
+      }
+  //si l'utilisateur n'a pas confirmé son adresse mail. 
+      if(dataError.status=== 414){
+    Swal.fire({
+      icon: 'error',
+      title: 'Compte non vérifié',
+      text: 'merci d\'activer votre compte. Vérifiez vos mails ou les spams',
+      footer: '<a href="#" id="resendConnexionEmail">Renvoyer l\'email</a>'
+    })
+    //pour récupérer à nouveau le mail. a voir si autre idée à mettre en place
+    document.getElementById('resendConnexionEmail').addEventListener('click', function(e) {
+      e.preventDefault(); 
+      const mailCandidat= document.getElementById('emailConnexion').value
+      sendEmailAgain(mailCandidat);
+    });
+    }else{
+
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
-      text: 'Une erreur est survenue lors de la connexion !',
-      footer: '<a href="">Why do I have this issue?</a>'
+      text: 'Une erreur interne est survenue lors de la connexion !',
     })
-  });
+     }
+    }
+     });
       }
     };
  
@@ -219,6 +292,7 @@ Swal.fire({
             id="prenom"
             name="prenom"
             placeholder="Votre prénom"
+            value={inscription.prenom}
             required
             onChange={handleInputChange}
           />
@@ -230,7 +304,7 @@ Swal.fire({
             name="nom"
             placeholder="Votre nom"
             required
-            value={nom}
+            value={inscription.nom}
             onChange={handleInputChange}
           />
           <p className="error">{erreursChamps['nom']}</p>
@@ -239,6 +313,7 @@ Swal.fire({
             className="champs"
             id="email"
             name="email"
+            value={inscription.email}
             placeholder="Votre adresse mail"
             required
             onChange={handleInputChange}
@@ -247,18 +322,20 @@ Swal.fire({
           <input
             type="text"
             className="champs"
-            id="pseudo"
-            name="pseudo"
+            id="login"
+            name="login"
+            value={inscription.login}
             placeholder="Choisissez un pseudo"
             required
             onChange={handleInputChange}
           />
-          <p className="error">{erreursChamps['pseudo']}</p>
+          <p className="error">{erreursChamps['login']}</p>
           <input
             type="password"
             className="champs"
             id="password"
-            name="password"
+            name="pwd"
+            value={inscription.pwd}
             placeholder="Choisissez un mot de passe"
             required
             onChange={handleInputChange}
@@ -269,6 +346,7 @@ Swal.fire({
             className="champs"
             id="confirmation"
             name="confirmation"
+            value={inscription.confirmation}
             placeholder="Confirmez votre mot de passe"
             required
             onChange={handleInputChange}
@@ -285,22 +363,24 @@ Swal.fire({
           <input
             type="text"
             className="champs"
-            id="email-connexion"
-            name="email-connexion"
+            id="emailConnexion"
+            name="emailConnexion"
             placeholder="Adresse email"
+            value={infoConnexion.emailConnexion}
             required
-          onChange={handleInputChange}/>
-          <p className="error">{erreursChamps['email-connexion']}</p>
+          onChange={signInInputChange}/>
+          <p className="error">{erreursChampsConnexion['emailConnexion']}</p>
           <input
             type="password"
             className="champs"
-            id="password-connexion"
-            name="password-connexion"
+            id="passwordConnexion"
+            name="passwordConnexion"
             placeholder="Mot de passe"
+            value={infoConnexion.passwordConnexion}
             required
-            onChange={handleInputChange}
+            onChange={signInInputChange}
           />
-          <p className="error">{erreursChamps['password-connexion']}</p>
+          <p className="error">{erreursChampsConnexion['passwordConnexion']}</p>
           <button type="submit">Se connecter</button>
         </form>
       </section>
