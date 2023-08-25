@@ -12,7 +12,7 @@ export default function VerifCompte () {
 console.log(token)
         if (token && email) {
             // Appel API pour confirmer l'inscription
-            axios.get(`http://localhost:3002/users/confirmInscription?token=${token}&email=${email}`)
+            axios.get(`http://localhost:3002/users/confirmInscription/${token}/${email}`)
             .then(response => {
                 if (response.status===200) {
                     Swal.fire({
