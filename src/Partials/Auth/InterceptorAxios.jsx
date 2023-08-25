@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { useAuth } from './AuthContext'
 import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 export const initAxiosInterceptors = (signOut) => {
+  
 axios.interceptors.response.use(
-
+  
     
     (response) => {
       console.log("Response received:", response);
@@ -14,7 +16,11 @@ axios.interceptors.response.use(
       if(error.response){
       console.log("Error intercepted:", error);
       if (error.response.status === 402 || error.response.status === 401|| error.response.status === 403) {
+        //je le deconnecte
         signOut();
+        //je le renvoie à la page de connexion
+        useNavigate('/connexion')
+        //j'affiche le message d'erreur
         Swal.fire({
           icon: 'error',
           title: 'Session expirée',
@@ -24,6 +30,8 @@ axios.interceptors.response.use(
 
       //en cas de grand nombre de tentative de connexion
       if (error.response.status === 429) {
+
+        //à améliorer pour afficher le temps restant
         Swal.fire({
             icon: 'error',
             title: 'Trop de tentatives',
