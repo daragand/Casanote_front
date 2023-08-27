@@ -22,11 +22,11 @@ const itemMenu = [
     {url:"/Infos",name:"Informations",icon:infoimg}
 ];
 
-export default function NavBar () {
+export default function NavBar ({ toggleOpen }) {
     return (
       <motion.ul variants={variants}>
         {itemMenu.map(link => (
-          <ItemsNavBar itemLink={link} key={link.name} />
+          <ItemsNavBar itemLink={link} key={link.name} toggleOpen={toggleOpen} />
         ))}
       </motion.ul>
     );

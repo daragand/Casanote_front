@@ -61,7 +61,7 @@ useEffect(() => {
       ref={containerRef}
     >
       <motion.div className="backgroundMenu" variants={sidebar} />
-      <NavBar />
+      <NavBar toggleOpen={toggleOpen} />
       <ToggleBtn toggle={() => toggleOpen()} />
     </motion.nav>
   );
