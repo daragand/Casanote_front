@@ -30,6 +30,16 @@
   background-color: var(--grisbackground);
 }
 
+.flex-row{
+ display:flex;
+ flex-direction:row;
+ gap:10px;
+}
+.flex-column{
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+}
 /* -----------------------------------------
               Polices et titres
 -------------------------------------------*/
@@ -71,38 +81,113 @@ header {
   /* padding-left: 3rem; */
   margin-left:10rem;
 }
-
 /* -----------------------------------------
-                   Navigation
+                   NavigationDYN
 -------------------------------------------*/
 
-#navigation {
-  background-color: var(--bleu);
+.backgroundMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 23rem;
+  background: var(--grisclair);
+}
+.btnToggle{
+  outline: none;
+  border: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: pointer;
+  position: absolute;
+  top: 18px;
+  left: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: transparent;
+}
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  padding: 25px;
+  position: absolute;
+  top: 7rem;
+  width: 22rem;
+}
+
+li {
+  list-style: none;
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: column;
-}
-
-.navigation_menu {
-  color: #fff;
-  border-bottom-width: 1px;
+  align-items: center;
+  cursor: pointer;
+  border-bottom-width: 3px;
   border-bottom-style: solid;
-  border-bottom-color: white;
-  padding: 1rem 0 1rem 5rem;
-  font-size: 2.2rem;
-  background-position: left;
-  background-size: 3rem;
-  background-repeat: no-repeat;
-  background-position-x: 1rem;
+  border-bottom-color: var(--grisfonce);
+}
+li a{
+  font-size:24px;
+  padding-top:1rem;
+  padding-bottom:0.5rem;
+}
+.iconMenu img{
+  width:3rem;
+  padding-bottom:0.5rem;
 }
 
-/*animation menu */
-.navigation_menu:hover {
-  background-color: var(--vert);
-}
 
-.navigation_menu:active {
-  background-color: var(--vert);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* -----------------------------------------
             LOADER
 -------------------------------------------*/
@@ -120,6 +205,64 @@ header {
   100% { transform: rotate(360deg); }
 }
 
+/* -----------------------------------------
+            CAROUSEL
+-------------------------------------------*/
+/* aspect général du résultat du carousel */
+ .carousel-images {
+  position: relative;
+  border-radius: 10px;
+  height: 400px;
+  max-width: 650px;
+  margin: 1rem;
+  overflow: hidden;
+}
+.carousel-images img {
+  width: 99%;
+  height: 99%;
+  border-radius: 8px;
+  border: #ff00008e solid 2px;
+} 
+/* met de l'espace entre les flèches du carousel*/
+.carousel-slide_direction {
+  display: flex;
+  justify-content: space-between;
+}
+.carousel-arrow-left,
+.carousel-arrow-right {
+  background-color: #fb666675;
+  color: #fff;
+  padding: 2px 0px 2px 1px;
+  margin: 0 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 10px;
+  height: 25px;
+  width: 25px;
+}
+.carousel-arrow-left {
+  left: 0;
+}
+.carousel-arrow-right {
+  right: 0;
+}
+.carousel-indicator {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.carousel-dot {
+  background-color: var(--grisfonce);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+.active {
+  background-color: var(--vert)
+}
 /* -----------------------------------------
             FORMULAIRES
 -------------------------------------------*/
@@ -157,13 +300,13 @@ padding:1rem;
   margin-right:2rem;
 }
 /* gestion des boutons */
-button:not(.toggle_button){
+button:not(.btnToggle){
   background-color: var(--bleu);
   border-radius: 16px;
   padding:1rem;
   color:#fff;
 }
-button:hover{
+button:hover:not(.btnToggle){
   background-color: var(--vert);
 }
 /* fin de gestion des boutons */

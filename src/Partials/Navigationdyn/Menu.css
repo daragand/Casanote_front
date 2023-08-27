@@ -1,0 +1,46 @@
+/* Style de base pour le menu */
+.menu {
+  
+    display: flex;
+    flex-direction: column;
+    width: 60px; /* Largeur initiale du menu rétracté */
+    background-color: #f1f1f1;
+    padding: 10px;
+    transition: width 0.5s ease; /* Transition fluide de la largeur */
+  }
+  
+  /* Style des icônes */
+  .menu i {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Style des intitulés */
+  .menu span {
+    display: none; /* Cachés par défaut */
+  }
+  
+  /* Style lorsque le menu est déployé */
+  .menu.menuRetractable {
+    width: 200px; /* Largeur du menu déployé */
+  }
+
+  /* Style des intitulés lorsque le menu est déployé */
+  .menu.menuRetractable span {
+    display: block; /* Affichés lorsque le menu est déployé */
+  }
+  /* Style et position du bouton de retractation du menu */
+.toggle_button{
+    position:absolute;
+    margin-top:-7rem;
+    color:#000;
+    font-size:4rem;
+    margin-bottom:1.3rem;
+    margin-left:2rem;
+    transition:0.5s;
+  }
+
+
+  
+  
