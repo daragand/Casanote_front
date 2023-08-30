@@ -1,9 +1,32 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Carousel({ images }) {
   const [[currentIndex, direction], setCurrentIndex] = useState([0, 0]);
-  
+  const [carouselModal,setCarouselModal]=useState(false)
+
+//pour aggrandir l'image
+const toggleModal = () => {
+  setCarouselModal(!carouselModal);
+};
+
+//pour sortir du clic sur une image
+useEffect(() => {
+  const closeOnEscape = (e) => {
+    if (e.key === "Escape") {
+      setCarouselModal(false);
+    }
+  };
+
+  window.addEventListener("keydown", closeOnEscape);
+
+  return () => {
+    window.removeEventListener("keydown", closeOnEscape);
+  };
+}, []);
+
+
+
   const slideVariants = {
     enter: (direction) => {
       return {
@@ -43,7 +66,9 @@ export default function Carousel({ images }) {
     <div className="carousel-images">
         <AnimatePresence initial={false} custom={direction}>
         <motion.img
+
           key={currentIndex}
+          onClick={toggleModal}
           src={images[currentIndex]}
           custom={direction}
           variants={slideVariants}
@@ -59,8 +84,8 @@ export default function Carousel({ images }) {
           dragElastic={1}
         />
       </AnimatePresence>
-      <div className="carousel-slide_direction">
-        <div className="carousel-arrow-left" onClick={handlePrevious}>
+      <div className="carousel-slide_direction modal-direction">
+        <div className="carousel-arrow-left modal-arrow-left" onClick={handlePrevious}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="20"
@@ -70,7 +95,7 @@ export default function Carousel({ images }) {
             <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z" />
           </svg>
         </div>
-        <div className="carousel-arrow-right" onClick={handleNext}>
+        <div className="carousel-arrow-right modal-arrow-right" onClick={handleNext}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="20"
@@ -81,15 +106,28 @@ export default function Carousel({ images }) {
           </svg>
         </div>
       </div>
-      <div className="carousel-indicator">
+      <div className="carousel-indicator modal-indicator">
         {images.map((_, index) => (
           <div
             key={index}
-            className={`carousel-dot ${currentIndex === index ? "active" : ""}`}
+            className={`carousel-dot ${currentIndex === index ? "dot-active" : ""}`}
             onClick={() => handleDotClick(index)}
           ></div>
         ))}
       </div>
+      {carouselModal && (
+        <div className="carousel-modal">
+          <motion.img
+            src={images[currentIndex]}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          <div className="modal-close" onClick={toggleModal}>
+            X
+          </div>
+        </div>
+      )}
     </div>
   );
 }
