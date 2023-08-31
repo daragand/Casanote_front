@@ -30,6 +30,18 @@ export default function Logement() {
         console.error(error);
       });
   }, []);
+  
+  
+   //pour le cadastre
+//   useEffect(() => {
+
+//     if (logements){
+//   axios.get()
+// }
+
+//   }, []);
+ 
+
 
   const addHouse = () => {
     navigate("/logement/ajout");
@@ -45,7 +57,7 @@ export default function Logement() {
               {logements.logementId} - {logements.nomLogement}
             </h3>
             <div>
-              <SubMenuHouse />
+              <SubMenuHouse selectedLogement={logements} />
             </div>
           </section>
           <section className="flex-row" key={logements.logementId}>

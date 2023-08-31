@@ -54,14 +54,14 @@ useEffect(() => {
 
 
   return (
-    <motion.nav
+    <motion.nav className="menudyn"
       initial={false}
       animate={isOpen ? "open" : "closed"}
       custom={height}
       ref={containerRef}
     >
       <motion.div className="backgroundMenu" variants={sidebar} />
-      <NavBar toggleOpen={toggleOpen} />
+      <NavBar isOpen={isOpen} toggleOpen={toggleOpen} />
       <ToggleBtn toggle={() => toggleOpen()} />
     </motion.nav>
   );

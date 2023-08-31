@@ -41,7 +41,7 @@ function useSubMenu(isOpen) {
   return scope;
 }
 
-export default function SubMenu({ links }) {
+export default function SubMenu({ links,selectedLogement }) {
   const [isOpen, setIsOpen] = useState(false);
   const scope = useSubMenu(isOpen);
 
@@ -67,7 +67,10 @@ export default function SubMenu({ links }) {
         {links.map((link, index) => (
           <li key={index}>
             <Link
-              to={link.href}
+              to={{
+                pathname: link.href,
+                state: link.state
+              }}
               onClick={() => {
                 setIsOpen(false);
               }}

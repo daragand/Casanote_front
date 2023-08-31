@@ -156,7 +156,7 @@ li:not(.cicleul) {
   padding: 0;
 }
 
-ul:not(.cicleul) {
+.menudyn ul:not(.cicleul) {
   padding: 25px;
   position: absolute;
   top: 7rem;
@@ -164,7 +164,7 @@ ul:not(.cicleul) {
   z-index: 998
 }
 
-li:not(.cicleul) {
+.menudyn li:not(.cicleul) {
   list-style: none;
   margin-bottom: 20px;
   display: flex;
@@ -184,6 +184,14 @@ li span{
 .iconMenu img{
   width:3rem;
   padding-bottom:0.5rem;
+}
+
+.nav-links-active {
+  display: block;
+}
+
+.nav-links-inactive {
+  display: none;
 }
 
 
@@ -243,7 +251,7 @@ li span{
   margin: auto 10px;
   height: 25px;
   width: 25px;
-  z-index: 9991;
+  z-index: 9;
 }
 .carousel-arrow-left {
   left: 0;
@@ -305,7 +313,7 @@ li span{
   margin: auto;
   height: 40px;  /* Adjust as needed */
   width: 40px;   /* Adjust as needed */
-  z-index: 9999;
+  z-index: 9;
 }
 
 .modal-arrow-left {

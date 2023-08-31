@@ -1,22 +1,24 @@
 import SubMenu from "./SubMenuComp";
 
-const SubMenuHouse = () => {
+const SubMenuHouse = ({ selectedLogement }) => {
+  console.log("Selected Logement in SubMenuHouse:", selectedLogement);
   const houseLinks = [
     {
       label: "Modifier le logement",
-      href: "#",
+      href: `/house/update/${selectedLogement.logementId}`,
+      state:  selectedLogement 
     },
     {
       label: "Supprimer le logement",
-      href: "#",
+      href: "",
     },
     {
       label: "Céder le logement",
-      href: "#",
+      href: "",
     },
   ];
 
-  return <SubMenu links={houseLinks} />;
+  return <SubMenu links={houseLinks} selectedLogement={ selectedLogement } />;
 };
 
 export default SubMenuHouse;

@@ -14,6 +14,9 @@ import Connexion from "./Pages/Inscription/Connexion";
 import FormulaireLogement from "./Pages/Logement/AjoutLogement";
 import ProtectedRoutes from "./Partials/Auth/ProtectedRoutes";
 import VerifCompte from "./Pages/Inscription/VerificationMail";
+import UpdateHouse from "./Pages/Logement/UpdateHouse";
+
+
 
 function App() {
   const {handleSignOut}  = useAuth();
@@ -41,6 +44,15 @@ function App() {
                 element={
                   <ProtectedRoutes >
                     <Logement />
+                  </ProtectedRoutes>
+                }
+              />
+              <Route
+                exact
+                path="/house/update/:id"
+                element={
+                  <ProtectedRoutes >
+                    <UpdateHouse />
                   </ProtectedRoutes>
                 }
               />
