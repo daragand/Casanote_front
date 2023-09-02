@@ -36,6 +36,7 @@ function App() {
           <Routes>
           <Route exact path="/connexion" element={<Connexion />} />
           <Route exact path="/users/confirmInscription/:token/:email" element={<VerifCompte />} />
+              
             <Route path="/" element={<Template />}>
               <Route exact path="/" element={<Dashbord />} />
               <Route
@@ -64,7 +65,7 @@ function App() {
                     <Pieces />
                   </ProtectedRoutes>
                 }
-              />
+                />
               <Route
                 exact
                 path="/travaux"
@@ -73,7 +74,7 @@ function App() {
                     <Travaux />
                   </ProtectedRoutes>
                 }
-              />
+                />
               <Route exact path="/infos" element={<Informations />} />
               <Route
                 exact
@@ -83,13 +84,14 @@ function App() {
                     <Compte />
                   </ProtectedRoutes>
                 }
-              />
+                />
               <Route
                 exact
                 path="/logement/ajout"
                 element={<FormulaireLogement />}
-              />
+                />
             </Route>
+                
           </Routes>
         </BrowserRouter>
             </AuthProvider>

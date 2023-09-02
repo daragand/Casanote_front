@@ -3,6 +3,7 @@ import { useAnimate, stagger, motion } from "framer-motion";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { ItemToEditProvider } from "../EditContext/EditContext";
 
 const staggerMenuItems = stagger(0.2, { startDelay: 0.15 });
 
@@ -67,10 +68,9 @@ export default function SubMenu({ links,selectedLogement }) {
         {links.map((link, index) => (
           <li key={index}>
             <Link
-              to={{
-                pathname: link.href,
-                state: link.state
-              }}
+              to={
+                 link.href
+              }
               onClick={() => {
                 setIsOpen(false);
               }}

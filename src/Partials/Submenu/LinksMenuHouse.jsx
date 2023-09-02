@@ -18,7 +18,7 @@ const SubMenuHouse = ({ selectedLogement }) => {
     },
   ];
 
-  return <SubMenu links={houseLinks} selectedLogement={ selectedLogement } />;
+  return <SubMenu links={houseLinks} selectedLogement={selectedLogement}  />;
 };
 
 export default SubMenuHouse;

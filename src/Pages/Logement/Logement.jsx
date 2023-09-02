@@ -6,13 +6,14 @@ import Carousel from "../../Partials/outils/carousel";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SubMenuHouse from "../../Partials/Submenu/LinksMenuHouse";
-
+import { ItemToEditProvider,useItemToEdit  } from "../../Partials/EditContext/EditContext";
 
 
 export default function Logement() {
   const [logements, setLogement] = useState(null);
   const [errorHouse, setErrorHouse] = useState([]);
-
+//pour basculer le logement à la mise à jour
+const { itemToEdit, setItemToEdit } = useItemToEdit();
   const navigate = useNavigate();
  
 
@@ -25,6 +26,7 @@ export default function Logement() {
       .then((data) => {
         console.log("réponse niveau axio", data);
         setLogement(data);
+        setItemToEdit(data);
       })
       .catch((error) => {
         console.error(error);
@@ -57,7 +59,9 @@ export default function Logement() {
               {logements.logementId} - {logements.nomLogement}
             </h3>
             <div>
-              <SubMenuHouse selectedLogement={logements} />
+            <ItemToEditProvider>
+              <SubMenuHouse selectedLogement={logements}  />
+              </ItemToEditProvider>
             </div>
           </section>
           <section className="flex-row" key={logements.logementId}>
