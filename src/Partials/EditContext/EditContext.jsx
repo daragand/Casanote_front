@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 // Création du contexte à exploiter pour la modification du logement, de la pièce et du travaux
 export const ItemToEditContext = createContext();
@@ -18,7 +18,9 @@ export const ItemToEditProvider = ({ children }) => {
 export const useItemToEdit = () => {
   const context = useContext(ItemToEditContext);
   if (!context) {
-    throw new Error('useItemToEdit doit être utilisé au sein d\'un ItemToEditProvider. Vérifier dans App.js que le composant y est bien intégré');
+    throw new Error(
+      "useItemToEdit doit être utilisé au sein d'un ItemToEditProvider. Vérifier dans App.js que le composant y est bien intégré"
+    );
   }
   return context;
 };

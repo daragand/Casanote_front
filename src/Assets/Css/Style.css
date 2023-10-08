@@ -28,6 +28,7 @@
   grid-column: 2/-1;
   padding:2rem;
   background-color: var(--grisbackground);
+  height: 100vh;
 }
 
 .flex-row{
@@ -39,6 +40,13 @@
  display:flex;
  flex-direction:column;
  gap:10px;
+}
+.grid-col4{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+  align-items: flex-start;
+  justify-content: center;
 }
 .encadrement{
   background-color: #fff;
@@ -373,12 +381,44 @@ li span{
   /* transform-origin: -20px 50%; */
 }
 
+/* -----------------------------------------
+            DropZone Image et Preview
+-------------------------------------------*/
+
+.previewIMG{
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+.imgPrev a{
+font-size:1.5rem;
+text-align: center;
+}
+
 
 
 /* -----------------------------------------
                    contenu des pages
 -------------------------------------------*/
+/* dashbord */
+.card-menu{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-flow: column nowrap;
+  border-radius: 16px;
+  justify-content: space-between;
+  border: 3px solid var(--bleu);
+  padding: 1rem;
+  align-items: center; /* Centre le contenu (y compris les images) verticalement */
+  text-align: center; /* Centre le texte horizontalement */
+}
 
+.card-menu img{
+  width:50%;
+  object-fit: contain;
+  max-height: 100%;
+}
 
 
 
@@ -466,6 +506,6 @@ footer {
   background-color: var(--bleu);
   padding: 1.5rem;
   text-align: center;
-  grid-row: -1;
+  grid-row-end: 4;
   grid-column: 1 / -1;
 }

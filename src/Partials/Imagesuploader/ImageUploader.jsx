@@ -6,7 +6,14 @@ import { useDropzone } from 'react-dropzone';
 //composant de chargement des images en glisser-déposer. dès qu'une image est chargée, le useCallback entre en action et place les images dans la fonction
 
 export default function ImageUploader  ({ onImagesSelected }) {
+   console.log('image uploader',onImagesSelected)
     const onDrop = useCallback(acceptedFiles => {
+        console.log('image accepted file',acceptedFiles)
+        if (!acceptedFiles || acceptedFiles.length ===0){
+            return
+               }
+
+
         // je Limite à 5 fichiers, l'ajout.
         if (acceptedFiles.length > 5) {
             alert("Vous ne pouvez télécharger que 5 fichiers à la fois.");
@@ -29,9 +36,10 @@ export default function ImageUploader  ({ onImagesSelected }) {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
         onDrop,
-        accept: 'image/jpeg, image/png, image/webp' 
+        accept: 'jpeg, png, webp' 
      });
-
+    
+     
     return (
 
         // a voir si je place cela dans le css

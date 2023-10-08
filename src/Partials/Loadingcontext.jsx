@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
-import Loader from './Loader';
+import React, { createContext, useState, useContext } from "react";
+import Loader from "./Loader";
 //je créé une fonction de conception de context
 const LoadingContext = createContext();
 

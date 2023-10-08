@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./FormAjoutLogement.css";
 import axios from "axios";
 import { useLoading } from "../../Partials/Loadingcontext";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import ImageUploader from "../../Partials/Imagesuploader/ImageUploader";
 import ImagePreview from "../../Partials/Imagesuploader/ImageView";
 
@@ -35,7 +35,11 @@ function LocalisationStep({ onNext, data }) {
   const searchAdress = (address) => {
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_DOMAIN}logement/adresse`, { address: address },{ withCredentials: true })
+      .post(
+        `${process.env.REACT_APP_DOMAIN}logement/adresse`,
+        { address: address },
+        { withCredentials: true }
+      )
       .then((response) => {
         const data = response.data;
         if (data.features && data.features.length > 0) {
@@ -114,7 +118,7 @@ function LocalisationStep({ onNext, data }) {
         onChange={handleAddressChange}
       />
       {suggestionsAdresses.length > 0 ? (
-        <div className="suggestions-results">
+        <div className="suggestions-results" autocomplete="off">
           {suggestionsAdresses.map((adresse, index) => (
             <div
               key={index}
@@ -181,7 +185,7 @@ function LocalisationStep({ onNext, data }) {
   );
 }
 
-function PiecesSurfaceStep({ onNext ,data}) {
+function PiecesSurfaceStep({ onNext, data }) {
   const [niveaux, setNiveaux] = useState(data.niveaux || 1);
   const [pieces, setPieces] = useState(data.pieces || 1);
   const [surface, setSurface] = useState(data.surface || 0);
@@ -302,29 +306,27 @@ function ChauffageStep({ onNext, data }) {
 
 function DateEntreeStep({ onValidate, data }) {
   const [dateEntree, setDateEntree] = useState(data.dateEntree || "");
-  const [nomLogement, setNomLogement] = useState(data.nomLogement || "Logement principal");
-const [imagesLogement, setImagesLogement]=useState([])
+  const [nomLogement, setNomLogement] = useState(
+    data.nomLogement || "Logement principal"
+  );
+  const [imagesLogement, setImagesLogement] = useState([]);
 
-  
+  // pour la récupération des images du logement
+  const handleImagesSelected = (newImages) => {
+    setImagesLogement((prev) => [...prev, ...newImages]);
+  };
 
+  const handleValidate = (e) => {
+    e.preventDefault();
 
-// pour la récupération des images du logement
-const handleImagesSelected = (newImages) => {
-  setImagesLogement(prev => [...prev, ...newImages]);
-};
-
-const handleValidate = (e) => {
-  e.preventDefault();
-
-//gestion des images
-const images = new FormData();
+    //gestion des images
+    const images = new FormData();
     for (let file of imagesLogement) {
-        images.append("imagesLogement", file);
+      images.append("imagesLogement", file);
     }
 
-
-  onValidate({ dateEntree, nomLogement,images: imagesLogement });
-};
+    onValidate({ dateEntree, nomLogement, images: imagesLogement });
+  };
   return (
     <form>
       <label htmlFor="nomLogement">Nom attribué à votre logement :</label>
@@ -365,7 +367,7 @@ export default function FormulaireLogement() {
     localisation: {},
     piecesSurface: {},
     chauffage: {},
-    dateEntree: {}
+    dateEntree: {},
   });
 
   //fonction qui permet la récupération des données
@@ -378,39 +380,43 @@ export default function FormulaireLogement() {
     setFormData(newFormData);
     setCurrentStep(currentStep + 1);
   };
- 
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //envoi au back-end des infos globales du logement
   const finalValidate = (data) => {
     //récupération des éléments du formulaire en ajoutant les éléments de la dernière étape
-    const dataLogement = { ...formData, dateEntree: data.dateEntree, nomLogement: data.nomLogement, images: data.images};
-//concentration de l'objet avant envoi via formData
-const logement = new FormData();
-logement.append("data", JSON.stringify(dataLogement));
-data.images.forEach((image) => {
-  logement.append("imagesLogement", image); // Ajout des images
-});
-    console.log(logement)
-    
+    const dataLogement = {
+      ...formData,
+      dateEntree: data.dateEntree,
+      nomLogement: data.nomLogement,
+      images: data.images,
+    };
+    //concentration de l'objet avant envoi via formData
+    const logement = new FormData();
+    logement.append("data", JSON.stringify(dataLogement));
+    data.images.forEach((image) => {
+      logement.append("imagesLogement", image); // Ajout des images
+    });
+    console.log(logement);
+
     axios
-      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`,  
-        logement
-       ,{ withCredentials: true })
+      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`, logement, {
+        withCredentials: true,
+      })
       .then((res) => {
         Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Logement créé avec succès',
+          position: "center",
+          icon: "success",
+          title: "Logement créé avec succès",
           showConfirmButton: false,
-          timer: 2500
+          timer: 2500,
         }).then(() => {
-              // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
-            navigate('/logement')
-        })
-        console.log("Success: ", res)
-    })
+          // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
+          navigate("/logement");
+        });
+        console.log("Success: ", res);
+      })
       .catch((error) => console.log("Error: ", error));
   };
 
@@ -423,19 +429,26 @@ data.images.forEach((image) => {
         <li className={currentStep === 4 ? "active" : ""}>Date d'entrée</li>
       </ul>
 
-{/* boutons suivant en récupérant les données à chaque étape */}
-      {currentStep === 1 && <LocalisationStep onNext={onNext} data={formData.localisation} />}
-      {currentStep === 2 && <PiecesSurfaceStep onNext={onNext} data={formData.piecesSurface} />}
-      {currentStep === 3 && <ChauffageStep onNext={onNext} data={formData.chauffage} />}
-      {currentStep === 4 && <DateEntreeStep onValidate={finalValidate} data={formData.dateEntree} />}
-    
+      {/* boutons suivant en récupérant les données à chaque étape */}
+      {currentStep === 1 && (
+        <LocalisationStep onNext={onNext} data={formData.localisation} />
+      )}
+      {currentStep === 2 && (
+        <PiecesSurfaceStep onNext={onNext} data={formData.piecesSurface} />
+      )}
+      {currentStep === 3 && (
+        <ChauffageStep onNext={onNext} data={formData.chauffage} />
+      )}
+      {currentStep === 4 && (
+        <DateEntreeStep onValidate={finalValidate} data={formData.dateEntree} />
+      )}
+
       {/* Bouton 'précendent' à partir de la seconde étape */}
       {currentStep > 1 && (
         <button type="button" onClick={() => setCurrentStep(currentStep - 1)}>
           Précédent
         </button>
       )}
-    
     </div>
   );
 }

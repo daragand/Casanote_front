@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './connexion_style.scss'
+import { useNavigate, useLocation,Link } from 'react-router-dom';
+import './connexion_style.css'
 // import './style_formulaire.scss'
 import { useAuth } from '../../Partials/Auth/AuthContext';
 import axios from "axios";
 import Swal from 'sweetalert2'
-
+import logo from '../../Assets/visu/logo.png'
+import visuhouse from '../../Assets/visu/connexion_house.svg'
 
 export default function Connexion() {
  
@@ -32,7 +33,7 @@ console.log('suite à la demande du mail',res)
         'Vous êtes déjà connecté. Vous allez être redirigé vers la page d\'accueil.',
         'info'
       ).then(() => {
-        navigate('/'); // Redirigez vers la page d'accueil ou toute autre page appropriée.
+        navigate('/'); //je redirige vers l'accueil
       });
     }
   }, []);
@@ -43,7 +44,6 @@ console.log('suite à la demande du mail',res)
     nom:'',
     prenom:'',
     email:'',
-    login:'',
     pwd:'',
     confirmation:''
   })
@@ -53,7 +53,6 @@ console.log('suite à la demande du mail',res)
   Gen:/^([a-zA-Zéèàëïüûêöäôâ-]+)( [a-zA-Zéèàëïüûêöäôâ-]+)*$/,
   Email:/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
   Password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\];':"\\|,./?]).{8,}$/,
-  Login: /^[a-zA-Z0-9_-]{4,}$/ 
  }
  const [infoConnexion, setInfoConnexion] = useState({
   emailConnexion:'',
@@ -84,10 +83,6 @@ console.log('suite à la demande du mail',res)
       nouvellesErreurs['email'] = "Votre mail doit être dans le format monmail@domaine.fr";
     }
 
-    if (!motifs.Login.test(inscription.login)) {
-      nouvellesErreurs['pseudo'] = "Votre pseudo ne doit contenir que des lettres";
-    }
-
     if (!motifs.Password.test(inscription.pwd)) {
       nouvellesErreurs['password'] = "Votre mot de passe doit disposer de minimum 8 caractères, dont 1 majuscule, 1 minuscule, 1 chiffre, et 1 caractère spécial";
     }
@@ -108,8 +103,6 @@ console.log('suite à la demande du mail',res)
             setInscription({
               nom:'',
               prenom:'',
-            
-              login:'',
               pwd:'',
               confirmation:''
           })
@@ -123,7 +116,7 @@ console.log('suite à la demande du mail',res)
               e.preventDefault(); // Pour éviter que le lien ne navigue
               sendEmailAgain(inscription.email);
             });
-          }
+          }//fin du if 200
         })
         .catch(error => {
           const dataError = error.response
@@ -131,8 +124,8 @@ console.log('suite à la demande du mail',res)
               if(dataError.status === 400){
             Swal.fire({
               icon: 'error',
-              title: 'Email ou pseudo existant',
-              text: 'Veuillez choisir un nouvel email ou un autre pseudo ',
+              title: 'Email existant',
+              text: 'Veuillez choisir un nouvel email ou vous connecter ',
             })
             }else{
           Swal.fire({
@@ -179,15 +172,12 @@ console.log('suite à la demande du mail',res)
           delete newState[name];
           return newState;
       });
-      console.log(infoConnexion)
+      
   }
   }
 
-  const [afficherInscription, setAfficherInscription] = useState(true);
+  const [afficherInscription, setAfficherInscription] = useState(1);
 
-  const toggleAfficherInscription = () => {
-    setAfficherInscription((prevAfficherInscription) => !prevAfficherInscription);
-  };
 
   const connexionFormulaire = (e) => {
     e.preventDefault();
@@ -223,28 +213,29 @@ console.log('suite à la demande du mail',res)
     
   })
   .catch(error => {
-    
+    console.log('',error)
     const dataError = error.response
 
     //je m'assure que l'erreur existe et que la partie status soit défini
     if (dataError && dataError.status) {
-//si mot de passe non reconnu
+      console.log('erreur lors de la connexion',dataError)
+        //si mot de passe non reconnu
         if(dataError.status === 412){
-  console.log('dataError')
-  Swal.fire({
-    icon: 'error',
-    title: 'Oops...',
-    text: 'erreur de mot de passe !',
-  })
+             
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'erreur de mot de passe !',
+      })}//fin du if 412
   //si email inexistant dans la base
-       } 
+        
          if(dataError.status=== 410){
     Swal.fire({
       icon: 'error',
       title: 'Email inexistant',
       text: 'merci de vérifier votre email ou de vous inscrire',
     })
-      }
+      }//fin du if 410
   //si l'utilisateur n'a pas confirmé son adresse mail. 
       if(dataError.status=== 414){
     Swal.fire({
@@ -254,11 +245,13 @@ console.log('suite à la demande du mail',res)
       footer: '<a href="#" id="resendConnexionEmail">Renvoyer l\'email</a>'
     })
     //pour récupérer à nouveau le mail. a voir si autre idée à mettre en place
-    document.getElementById('resendConnexionEmail').addEventListener('click', function(e) {
-      e.preventDefault(); 
-      const mailCandidat= document.getElementById('emailConnexion').value
-      sendEmailAgain(mailCandidat);
-    });
+          document.getElementById('resendConnexionEmail').addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const mailCandidat= document.getElementById('emailConnexion').value
+            sendEmailAgain(mailCandidat);
+              })
+       };//fin du if 414
+    
     }else{
 
     Swal.fire({
@@ -266,21 +259,27 @@ console.log('suite à la demande du mail',res)
       title: 'Oops...',
       text: 'Une erreur interne est survenue lors de la connexion !',
     })
-     }
-    }
-     });
+     }//fin du else
+    })//fin du catch error
+     };
       }
-    };
+    
  
 
   return (
-    <div className={`inscription ${afficherInscription ? 'connexion-visible' : ''}`}>
-      <div className="headerSign">
-      <button onClick={toggleAfficherInscription}>Inscription</button><br /><br />
-      <button onClick={toggleAfficherInscription}>Sign-in</button>
+    <div className={`inscription `}>
+      <div className="headerSign flex-space">
+        <img src={logo} alt="C représentant une maison avec le mot Casanote écrit à côté" />
+        <div className="flex-row">
+          <button onClick={() => setAfficherInscription(2)}>Inscription</button><br /><br />
+          <button onClick={() => setAfficherInscription(1)}>Sign-in</button>
+        </div>
+        <button><Link to="/">retour</Link></button>
       </div>
+       <article className='flex-row visuauth'>
+        <img src={visuhouse} alt="" />
        
-      <section id="inscription" className={afficherInscription ? 'fade-out' : ''}>
+      <section id="inscription" className={afficherInscription=== 2 ? '' : 'fade-out'}>
         <h2 className="title">Bienvenue</h2>
         <h4 className="subtitle">
           Casanote est le carnet d'entretien de votre maison en ligne. Il suit votre demeure dans son histoire, vous permet de recenser les pièces et les travaux que vous jugez opportun de renseigner.
@@ -319,17 +318,7 @@ console.log('suite à la demande du mail',res)
             onChange={handleInputChange}
           />
           <p className="error">{erreursChamps['email']}</p>
-          <input
-            type="text"
-            className="champs"
-            id="login"
-            name="login"
-            value={inscription.login}
-            placeholder="Choisissez un pseudo"
-            required
-            onChange={handleInputChange}
-          />
-          <p className="error">{erreursChamps['login']}</p>
+         
           <input
             type="password"
             className="champs"
@@ -356,7 +345,7 @@ console.log('suite à la demande du mail',res)
         </form>
       </section>
 
-      <section id="connexion" className={`${afficherInscription ? 'fade-in' : ''} ${afficherInscription ? '' : 'connexion-visible'}`}>
+      <section id="connexion" className={`${afficherInscription === 1 ? 'fade-in' : 'fade-out'} `}>
         <h2 className="title">Connexion</h2>
         <h4 className="subtitle">Connectez-vous à votre compte</h4>
         <form onSubmit={connexionFormulaire}>
@@ -384,7 +373,7 @@ console.log('suite à la demande du mail',res)
           <button type="submit">Se connecter</button>
         </form>
       </section>
-
+      </article>
      
     </div>
   );

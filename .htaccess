@@ -1,3 +1,4 @@
+<!-- Ce script corrige le fait d'écrire l'adresse dans la barre d'adresse -->
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /subdirectory
