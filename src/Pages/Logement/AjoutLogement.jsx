@@ -116,6 +116,7 @@ function LocalisationStep({ onNext, data }) {
         placeholder="N° et nom de la rue"
         value={adresse}
         onChange={handleAddressChange}
+        autoComplete="off"
       />
       {suggestionsAdresses.length > 0 ? (
         <div className="suggestions-results" autocomplete="off">
