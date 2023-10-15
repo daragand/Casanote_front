@@ -22,12 +22,12 @@ export default function Dashbord() {
   //récupération des données de l'utilisateur
 
   return (
-    <main className="row">
-      <article className="col-sm-6 mb-3 mb-sm-0">
+    <main className="row p-2 d-flex flex-row ">
+      <article className="col-xl-12 mb-3 mb-sm-0 ">
         {menuDash.map((card, index) => (
           <section
             key={index}
-            className="card"
+            className="card p-2 d-flex flex-column bd-highlight align-items-center"
           >
             <div className="icon text-center">
               <img src={card.icon} alt={card.title} />
