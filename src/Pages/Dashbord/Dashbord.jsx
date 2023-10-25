@@ -24,20 +24,20 @@ export default function Dashbord() {
   //récupération des données de l'utilisateur
 
   return (
-    <div className="page-wrapper">
-      <div className="container-fluid">
-        <div className="row m-5">
+    <div classNameName="page-wrapper">
+      <div classNameName="container-fluid">
+        <div classNameName="row m-5">
           {menuDash.map((card, index) => (
-            <div className="col-md-4" key={index}>
-              <div className="card border-dark">
-                <div className="card-header bg-dark">
-                  <h4 className="mb-0 text-white">{card.title}</h4>
+            <div classNameName="col-md-4" key={index}>
+              <div classNameName="card border-dark">
+                <div classNameName="card-header bg-dark">
+                  <h4 classNameName="mb-0 text-white">{card.title}</h4>
                 </div>
-                <div className="card-body">
-                <img src={card.icon} alt={card.title} class="rounded-circle w-50 mx-auto d-block"/>
-                  {/* <h3 className="card-title">Special title treatment</h3> */}
-                  <p className="card-text">{card.description}</p>
-                  <Link to={card.link} className="btn btn-secondary mx-auto">
+                <div classNameName="card-body">
+                <img src={card.icon} alt={card.title} className="rounded-circle w-50 mx-auto d-block"/>
+                  {/* <h3 classNameName="card-title">Special title treatment</h3> */}
+                  <p classNameName="card-text">{card.description}</p>
+                  <Link to={card.link} classNameName="btn btn-secondary mx-auto">
                     Accéder
                   </Link>
                 </div>
@@ -48,17 +48,17 @@ export default function Dashbord() {
       </div>
     </div>
 
-    // <main classNameName="row p-2 d-flex flex-row ">
-    //   <article classNameName="col-lg-9 mb-3 mb-sm-0 ">
+    // <main classNameNameName="row p-2 d-flex flex-row ">
+    //   <article classNameNameName="col-lg-9 mb-3 mb-sm-0 ">
     //     {menuDash.map((card, index) => (
     //       <section
     //         key={index}
-    //         classNameName="card p-2 d-flex flex-column bd-highlight align-items-center"
+    //         classNameNameName="card p-2 d-flex flex-column bd-highlight align-items-center"
     //       >
-    //         <div classNameName="icon text-center">
+    //         <div classNameNameName="icon text-center">
     //           <img src={card.icon} alt={card.title} />
     //         </div>
-    //         <div classNameName="details">
+    //         <div classNameNameName="details">
     //           <h2>{card.title}</h2>
     //           <p>{card.description}</p>
     //         </div>
