@@ -34,10 +34,10 @@ export default function Dashbord() {
                   <h4 className="mb-0 text-white">{card.title}</h4>
                 </div>
                 <div className="card-body">
-                <img src={card.icon} alt={card.title} class="img-thumbnail rounded w-50 mx-auto d-block"/>
-                  <h3 className="card-title">Special title treatment</h3>
+                <img src={card.icon} alt={card.title} class="rounded-circle w-50 mx-auto d-block"/>
+                  {/* <h3 className="card-title">Special title treatment</h3> */}
                   <p className="card-text">{card.description}</p>
-                  <Link to={card.link} className="btn btn-secondary">
+                  <Link to={card.link} className="btn btn-secondary mx-auto">
                     Accéder
                   </Link>
                 </div>
