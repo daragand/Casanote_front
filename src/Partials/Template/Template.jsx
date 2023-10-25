@@ -2,7 +2,7 @@ import Header from "../Header/Header"
 import Footer from "../Footer/Footer"
 import Navigation2 from "../Navigationdyn/Navigation"
 import '../../Assets/Css/Style.css'
-import '../../Assets/Css/connexion_style.css';
+// import '../../Assets/Css/connexion_style.css';
 
 import {Outlet} from 'react-router-dom'
 

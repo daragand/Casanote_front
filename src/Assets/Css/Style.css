@@ -420,10 +420,30 @@ text-align: center;
   max-height: 100%;
 }
 
-
-
-
-
+/* -----------------------------------------
+            CONNEXION-Inscription
+-------------------------------------------*/
+.imgConnexion{
+background-image: url(../images/icon/3.jpg);
+}
+.bgConnexion{
+  background-image: url(../images/icon/auth-bg.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.auth-box {
+  max-width: 800px;
+  margin: 5% 0;
+  position: relative;
+}
+.modal-bg-img {
+  background-size: cover;
+  background-position: center center;
+  min-height: 300px;
+}
+.auth-wrapper {
+  min-height: 100vh;
+}
 
 
 

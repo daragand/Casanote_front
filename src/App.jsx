@@ -16,6 +16,7 @@ import ProtectedRoutes from "./Partials/Auth/ProtectedRoutes";
 import VerifCompte from "./Pages/Inscription/VerificationMail";
 import UpdateHouse from "./Pages/Logement/UpdateHouse";
 import { ItemToEditProvider } from "./Partials/EditContext/EditContext";
+import Inscription from "./Pages/Inscription/Inscription";
 
 function App() {
   const { handleSignOut } = useAuth();
@@ -36,6 +37,7 @@ function App() {
                 path="/users/confirmInscription/:token/:email"
                 element={<VerifCompte />}
               />
+              <Route exact path="/inscription" element={<Inscription />} />
 
               <Route path="/" element={<Template />}>
                 <Route exact path="/" element={<Dashbord />} />
