@@ -24,20 +24,20 @@ export default function Dashbord() {
   //récupération des données de l'utilisateur
 
   return (
-    <div classNameName="page-wrapper">
-      <div classNameName="container-fluid">
-        <div classNameName="row m-5">
+    <div className="page-wrapper">
+      <div className="container-fluid">
+        <div className="row m-5">
           {menuDash.map((card, index) => (
-            <div classNameName="col-md-4" key={index}>
-              <div classNameName="card border-dark">
-                <div classNameName="card-header bg-dark">
-                  <h4 classNameName="mb-0 text-white">{card.title}</h4>
+            <div className="col-md-4" key={index}>
+              <div className="card border-dark">
+                <div className="card-header bg-dark">
+                  <h4 className="mb-0 text-white">{card.title}</h4>
                 </div>
-                <div classNameName="card-body">
+                <div className="card-body">
                 <img src={card.icon} alt={card.title} className="rounded-circle w-50 mx-auto d-block"/>
-                  {/* <h3 classNameName="card-title">Special title treatment</h3> */}
-                  <p classNameName="card-text">{card.description}</p>
-                  <Link to={card.link} classNameName="btn btn-secondary mx-auto">
+                  {/* <h3 className="card-title">Special title treatment</h3> */}
+                  <p className="card-text">{card.description}</p>
+                  <Link to={card.link} className="btn btn-secondary mx-auto">
                     Accéder
                   </Link>
                 </div>
@@ -48,17 +48,17 @@ export default function Dashbord() {
       </div>
     </div>
 
-    // <main classNameNameName="row p-2 d-flex flex-row ">
-    //   <article classNameNameName="col-lg-9 mb-3 mb-sm-0 ">
+    // <main classNameName="row p-2 d-flex flex-row ">
+    //   <article classNameName="col-lg-9 mb-3 mb-sm-0 ">
     //     {menuDash.map((card, index) => (
     //       <section
     //         key={index}
-    //         classNameNameName="card p-2 d-flex flex-column bd-highlight align-items-center"
+    //         classNameName="card p-2 d-flex flex-column bd-highlight align-items-center"
     //       >
-    //         <div classNameNameName="icon text-center">
+    //         <div classNameName="icon text-center">
     //           <img src={card.icon} alt={card.title} />
     //         </div>
-    //         <div classNameNameName="details">
+    //         <div classNameName="details">
     //           <h2>{card.title}</h2>
     //           <p>{card.description}</p>
     //         </div>
