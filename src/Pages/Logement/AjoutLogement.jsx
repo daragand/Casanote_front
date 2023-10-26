@@ -110,6 +110,7 @@ function LocalisationStep({ onNext, data }) {
       <label htmlFor="adresse">Adresse</label>
       <br />
       <input
+      class="form-control"
         type="text"
         id="adresse"
         name="adresse"
@@ -142,9 +143,10 @@ function LocalisationStep({ onNext, data }) {
         )
       )}
       <br />
-      <br />
+      
       <label htmlFor="cp">Rue</label>
       <input
+      class="form-control"
         type="text"
         id="rue"
         name="rue"
@@ -153,9 +155,10 @@ function LocalisationStep({ onNext, data }) {
         disabled
       />
       <br />
-      <br />
+      
       <label htmlFor="cp">Code Postal</label>
       <input
+      class="form-control"
         type="text"
         id="cp"
         name="cp"
@@ -165,6 +168,7 @@ function LocalisationStep({ onNext, data }) {
       />
       <label htmlFor="ville">Ville</label>
       <input
+      class="form-control"
         type="text"
         id="ville"
         name="ville"
@@ -173,7 +177,7 @@ function LocalisationStep({ onNext, data }) {
         disabled
       />
       <br />
-      <br />
+      
       <button
         type="button"
         onClick={() =>
@@ -422,6 +426,7 @@ export default function FormulaireLogement() {
   };
 
   return (
+    
     <div className="content">
       <ul className="step-indicator">
         <li className={currentStep === 1 ? "active" : ""}>Localisation</li>

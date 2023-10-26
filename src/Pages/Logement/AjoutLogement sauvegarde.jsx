@@ -1,127 +1,203 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./FormAjoutLogement.css";
 import axios from "axios";
+import { useLoading } from "../../Partials/Loadingcontext";
+import Swal from "sweetalert2";
+import ImageUploader from "../../Partials/Imagesuploader/ImageUploader";
+import ImagePreview from "../../Partials/Imagesuploader/ImageView";
 
-// Composant pour la première étape du formulaire
-function LocalisationStep({ onNext }) {
-  const [adresse, setAdresse] = useState("");
-  const [cp, setCp] = useState("");
-  const [ville, setVille] = useState("");
+function LocalisationStep({ onNext, data }) {
+  const { setLoading } = useLoading();
+  const [typeLogement, setTypeLogement] = useState(data.typeLogement || "");
+  const [adresse, setAdresse] = useState(data.adresse || "");
+  const [cp, setCp] = useState(data.cp || "");
+  const [ville, setVille] = useState(data.ville || "");
+  const [rue, setRue] = useState(data.rue || "");
   const [suggestionsAdresses, setSuggestionsAdresses] = useState([]);
-
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  const [searchActivated, setSearchActivated] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
 
   const handleAddressChange = (e) => {
-    setAdresse(e.target.value);
-  };
-
-  //le fetch est fait avec une temporalité. a voir si je conserve cette temporalité
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      searchAdress(adresse);
-    }, 100);
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [adresse]);
-  useEffect(() => {
-    setShowSuggestions(true); // Pour imposer suggestions adresses dans Datalist à chaque changement
-  }, [suggestionsAdresses]);
-
-  const searchAdress = (address) => {
+    const address = e.target.value;
+    setAdresse(address);
     if (address.length > 3) {
-      setIsTyping(true);
-      axios
-        .post("http://195.20.227.120/casanote:3002/logement/adresse", {
-          address: address,
-        })
-        .then((response) => {
-          const data = response.data;
-          if (data.features && data.features.length > 0) {
-            const suggAdresses = data.features.map((feature) => {
-              const suggestion = {
-                label: feature.properties.label,
-                adresse: feature.properties.name,
-                cp: feature.properties.postcode,
-                ville: feature.properties.city,
-              };
-              // console.log('label dans sugg',suggestion.label)
-              return { suggestion };
-            });
-            setSuggestionsAdresses(suggAdresses);
-            console.log("sugg d'adresse", suggestionsAdresses); //controle si des résultats sont fournis de nodeJS(apigouv)
-          } else {
-            setSuggestionsAdresses([]); // Aucune suggestion si aucune réponse valide
-          }
-          setIsTyping(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsTyping(false);
-        });
+      searchAdress(address);
     } else {
-      setSuggestionsAdresses([]); // Réinitialiser la liste des suggestions si le champ de recherche est vide ou court
+      setSuggestionsAdresses([]);
     }
   };
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    onNext();
+  const handleSuggestionMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+
+  const searchAdress = (address) => {
+    setLoading(true);
+    axios
+      .post(
+        `${process.env.REACT_APP_DOMAIN}logement/adresse`,
+        { address: address },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        const data = response.data;
+        if (data.features && data.features.length > 0) {
+          setSearchActivated(false);
+          const suggAdresses = data.features.map((feature) => {
+            const suggestion = {
+              label: feature.properties.label,
+              adresse: feature.properties.name,
+              cp: feature.properties.postcode,
+              ville: feature.properties.city,
+              context: feature.properties.context,
+            };
+            return { suggestion };
+          });
+          setSuggestionsAdresses(suggAdresses);
+        } else {
+          setSuggestionsAdresses([]);
+          setSearchActivated(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    setLoading(false);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setAdresse(suggestion.label);
+    setVille(suggestion.ville);
+    setCp(suggestion.cp);
+    setRue(suggestion.adresse);
+    setSuggestionsAdresses([]);
   };
 
   return (
     <form>
+      <label htmlFor="adresse">Type de logement</label>
+      <br />
+      <br />
+      <section className="typeLogement">
+        <div>
+          <input
+            type="radio"
+            id="Appartement"
+            name="Appartement"
+            value="Appartement"
+            checked={typeLogement === "Appartement"}
+            onChange={(e) => setTypeLogement(e.target.value)}
+          />
+          <label htmlFor="Appartement">Appartement</label>
+          <br />
+          <br />
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="Maison"
+            name="Maison"
+            value="Maison"
+            checked={typeLogement === "Maison"}
+            onChange={(e) => setTypeLogement(e.target.value)}
+          />
+          <label htmlFor="Maison">Maison</label>
+          <br />
+          <br />
+        </div>
+      </section>
       <label htmlFor="adresse">Adresse</label>
+      <br />
       <input
+      class="form-control"
         type="text"
         id="adresse"
         name="adresse"
         placeholder="N° et nom de la rue"
         value={adresse}
         onChange={handleAddressChange}
-        list="suggestions"
+        autoComplete="off"
       />
-      {(isTyping || suggestionsAdresses.length > 0) && ( // Show suggestions when typing or when results are available
-        <datalist id="suggestions">
+      {suggestionsAdresses.length > 0 ? (
+        <div className="suggestions-results" autocomplete="off">
           {suggestionsAdresses.map((adresse, index) => (
-            <option key={index} value={adresse.suggestion.label} />
+            <div
+              key={index}
+              className={`suggestion-item ${
+                hoveredIndex === index ? "selected-item" : ""
+              }`}
+              onClick={() => handleSuggestionClick(adresse.suggestion)}
+              onMouseEnter={() => handleSuggestionMouseEnter(index)}
+            >
+              <div>
+                <strong>{adresse.suggestion.label}</strong>
+              </div>
+              <div>{adresse.suggestion.context}</div>
+            </div>
           ))}
-        </datalist>
+        </div>
+      ) : (
+        searchActivated && (
+          <div className="suggestions-results">Aucun résultat</div>
+        )
       )}
+      <br />
+      <br />
+      <label htmlFor="cp">Rue</label>
+      <input
+      class="form-control"
+        type="text"
+        id="rue"
+        name="rue"
+        placeholder="rue de la liberté"
+        value={rue}
+        disabled
+      />
       <br />
       <br />
       <label htmlFor="cp">Code Postal</label>
       <input
+      class="form-control"
         type="text"
         id="cp"
         name="cp"
-        placeholder="75001"
+        placeholder="60000"
         value={cp}
-        onChange={(e) => setCp(e.target.value)}
         disabled
       />
       <label htmlFor="ville">Ville</label>
-      <input type="text" id="ville" name="ville" placeholder="Paris" />
-
+      <input
+      class="form-control"
+        type="text"
+        id="ville"
+        name="ville"
+        value={ville}
+        placeholder="Franconville"
+        disabled
+      />
       <br />
       <br />
-      <button type="submit" onClick={handleNext}>
+      <button
+        type="button"
+        onClick={() =>
+          onNext({ label: adresse, typeLogement, ville, cp, adresse: rue })
+        }
+      >
         Suivant
       </button>
     </form>
   );
 }
 
-// Composant pour la deuxième étape du formulaire
-function PiecesSurfaceStep({ onNext }) {
-  const [niveaux, setNiveaux] = useState(0);
-  const [pieces, setPieces] = useState(0);
-  const [surface, setSurface] = useState(0);
+function PiecesSurfaceStep({ onNext, data }) {
+  const [niveaux, setNiveaux] = useState(data.niveaux || 1);
+  const [pieces, setPieces] = useState(data.pieces || 1);
+  const [surface, setSurface] = useState(data.surface || 0);
 
   const handleNext = (e) => {
     e.preventDefault();
-    onNext();
+    onNext({ niveaux, pieces, surface });
   };
 
   return (
@@ -131,6 +207,7 @@ function PiecesSurfaceStep({ onNext }) {
         type="number"
         id="niveaux"
         name="niveaux"
+        min="1"
         value={niveaux}
         onChange={(e) => setNiveaux(parseInt(e.target.value))}
       />
@@ -140,6 +217,7 @@ function PiecesSurfaceStep({ onNext }) {
       <input
         type="number"
         id="pieces"
+        min="1"
         name="pieces"
         value={pieces}
         onChange={(e) => setPieces(parseInt(e.target.value))}
@@ -163,13 +241,17 @@ function PiecesSurfaceStep({ onNext }) {
   );
 }
 
-// Composant pour la troisième étape du formulaire
-function ChauffageStep({ onNext }) {
-  const [chauffage, setChauffage] = useState("");
-
+function ChauffageStep({ onNext, data }) {
+  const [chauffage, setChauffage] = useState(data.chauffage || "");
+  const [errorChauffage, seterrorChauffage] = useState(false);
+  //gestion de l'étape suivante avec envoi de l'info chauffage
   const handleNext = (e) => {
     e.preventDefault();
-    onNext();
+    if (chauffage) {
+      onNext({ chauffage });
+    } else {
+      seterrorChauffage(true);
+    }
   };
 
   return (
@@ -200,9 +282,9 @@ function ChauffageStep({ onNext }) {
         type="radio"
         id="pompe_a_chaleur"
         name="chauffage"
-        value="pompe_a_chaleur"
-        checked={chauffage === "pompe_a_chaleur"}
-        onChange={() => setChauffage("pompe_a_chaleur")}
+        value="pompe à chaleur"
+        checked={chauffage === "pompe à chaleur"}
+        onChange={() => setChauffage("pompe à chaleur")}
       />
       <label htmlFor="pompe_a_chaleur">Pompe à chaleur</label>
       <br />
@@ -217,6 +299,9 @@ function ChauffageStep({ onNext }) {
       <label htmlFor="climatisation">Climatisation</label>
       <br />
       <br />
+      {/* placer le message d'erreur à ce niveau */}
+      <br />
+      <br />
       <button type="button" onClick={handleNext}>
         Suivant
       </button>
@@ -224,17 +309,40 @@ function ChauffageStep({ onNext }) {
   );
 }
 
-// Composant pour la dernière étape du formulaire
-function DateEntreeStep({ onValidate }) {
-  const [dateEntree, setDateEntree] = useState("");
+function DateEntreeStep({ onValidate, data }) {
+  const [dateEntree, setDateEntree] = useState(data.dateEntree || "");
+  const [nomLogement, setNomLogement] = useState(
+    data.nomLogement || "Logement principal"
+  );
+  const [imagesLogement, setImagesLogement] = useState([]);
+
+  // pour la récupération des images du logement
+  const handleImagesSelected = (newImages) => {
+    setImagesLogement((prev) => [...prev, ...newImages]);
+  };
 
   const handleValidate = (e) => {
     e.preventDefault();
-    onValidate();
-  };
 
+    //gestion des images
+    const images = new FormData();
+    for (let file of imagesLogement) {
+      images.append("imagesLogement", file);
+    }
+
+    onValidate({ dateEntree, nomLogement, images: imagesLogement });
+  };
   return (
     <form>
+      <label htmlFor="nomLogement">Nom attribué à votre logement :</label>
+      <input
+        type="text"
+        id="nomLogement"
+        name="nomLogement"
+        value={nomLogement}
+        onChange={(e) => setNomLogement(e.target.value)}
+        required
+      />
       <label htmlFor="date_entree">Date d'entrée dans le logement :</label>
       <input
         type="date"
@@ -245,6 +353,10 @@ function DateEntreeStep({ onValidate }) {
       />
       <br />
       <br />
+      <label htmlFor="imagesLogement">Images de votre logement :</label>
+      <ImageUploader onImagesSelected={handleImagesSelected} />
+      <ImagePreview images={imagesLogement} />
+
       <button type="submit" onClick={handleValidate}>
         Valider
       </button>
@@ -252,76 +364,97 @@ function DateEntreeStep({ onValidate }) {
   );
 }
 
-// Composant principal du formulaire
-function SAUVEGARDEFormulaireLogement() {
+export default function FormulaireLogement() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [typeLogement, setTypeLogement] = useState("");
-  const [adresse, setAdresse] = useState("");
-  const [cp, setCp] = useState("");
-  const [ville, setVille] = useState("");
-  const [niveaux, setNiveaux] = useState(0);
-  const [pieces, setPieces] = useState(0);
-  const [surface, setSurface] = useState(0);
-  const [chauffage, setChauffage] = useState("");
-  const [dateEntree, setDateEntree] = useState("");
 
-  const handleNext = () => {
+  //création d'un objet pour récupérer les données du logement
+  const [formData, setFormData] = useState({
+    localisation: {},
+    piecesSurface: {},
+    chauffage: {},
+    dateEntree: {},
+  });
+
+  //fonction qui permet la récupération des données
+  const onNext = (data) => {
+    const newFormData = { ...formData };
+    if (currentStep === 1) newFormData.localisation = data;
+    if (currentStep === 2) newFormData.piecesSurface = data;
+    if (currentStep === 3) newFormData.chauffage = data;
+    if (currentStep === 4) newFormData.dateEntree = data;
+    setFormData(newFormData);
     setCurrentStep(currentStep + 1);
   };
 
-  const handleValidate = () => {
-    // Envoyer les données à un serveur ou effectuer d'autres traitements
-    console.log("Données du formulaire :");
-    console.log("Type de logement :", typeLogement);
-    console.log("Adresse :", adresse);
-    console.log("Code Postal :", cp);
-    console.log("Ville :", ville);
-    console.log("Nombre de niveaux :", niveaux);
-    console.log("Nombre de pièces :", pieces);
-    console.log("Surface habitable en m² :", surface);
-    console.log("Type de chauffage principal :", chauffage);
-    console.log("Date d'entrée dans le logement :", dateEntree);
+  const navigate = useNavigate();
+
+  //envoi au back-end des infos globales du logement
+  const finalValidate = (data) => {
+    //récupération des éléments du formulaire en ajoutant les éléments de la dernière étape
+    const dataLogement = {
+      ...formData,
+      dateEntree: data.dateEntree,
+      nomLogement: data.nomLogement,
+      images: data.images,
+    };
+    //concentration de l'objet avant envoi via formData
+    const logement = new FormData();
+    logement.append("data", JSON.stringify(dataLogement));
+    data.images.forEach((image) => {
+      logement.append("imagesLogement", image); // Ajout des images
+    });
+    console.log(logement);
+
+    axios
+      .post(`${process.env.REACT_APP_DOMAIN}logement/ajout`, logement, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Logement créé avec succès",
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
+          // La connexion a réussi, je redirige maintenant l'utilisateur vers le dashbord ou l'origine par la suite.
+          navigate("/logement");
+        });
+        console.log("Success: ", res);
+      })
+      .catch((error) => console.log("Error: ", error));
   };
 
   return (
+    
     <div className="content">
-      <ul className="step-indicator">
+      {/* <ul className="step-indicator">
         <li className={currentStep === 1 ? "active" : ""}>Localisation</li>
         <li className={currentStep === 2 ? "active" : ""}>Pièces et Surface</li>
         <li className={currentStep === 3 ? "active" : ""}>Chauffage</li>
         <li className={currentStep === 4 ? "active" : ""}>Date d'entrée</li>
-      </ul>
+      </ul> */}
 
+      {/* boutons suivant en récupérant les données à chaque étape */}
       {currentStep === 1 && (
-        <LocalisationStep
-          onNext={() => handleNext()}
-          setAdresse={setAdresse}
-          setCp={setCp}
-          setVille={setVille}
-        />
+        <LocalisationStep onNext={onNext} data={formData.localisation} />
       )}
       {currentStep === 2 && (
-        <PiecesSurfaceStep
-          onNext={() => handleNext()}
-          setNiveaux={setNiveaux}
-          setPieces={setPieces}
-          setSurface={setSurface}
-        />
+        <PiecesSurfaceStep onNext={onNext} data={formData.piecesSurface} />
       )}
       {currentStep === 3 && (
-        <ChauffageStep
-          onNext={() => handleNext()}
-          setChauffage={setChauffage}
-        />
+        <ChauffageStep onNext={onNext} data={formData.chauffage} />
       )}
       {currentStep === 4 && (
-        <DateEntreeStep
-          onValidate={() => handleValidate()}
-          setDateEntree={setDateEntree}
-        />
+        <DateEntreeStep onValidate={finalValidate} data={formData.dateEntree} />
+      )}
+
+      {/* Bouton 'précendent' à partir de la seconde étape */}
+      {currentStep > 1 && (
+        <button type="button" onClick={() => setCurrentStep(currentStep - 1)}>
+          Précédent
+        </button>
       )}
     </div>
   );
 }
-
-export default FormulaireLogement;
