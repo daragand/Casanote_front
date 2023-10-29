@@ -43,6 +43,7 @@ export default function Logement() {
 
   return (
     <main className="content">
+      <div className="container-fluid">
       <button onClick={addHouse}>Ajouter un logement</button>
       {logements.length > 0 ? (
         logements.map((logement,index) => (
@@ -66,7 +67,7 @@ export default function Logement() {
                     )}
                   />
                 </div>
-              ) : <img src={houseIMGdefaut} alt="illustration d'une maison tenue sur une main" />}
+              ) : <img className="img-fluid" src={houseIMGdefaut} alt="illustration d'une maison tenue sur une main" />}
               <div>
                 <h3>
                   {logement.logementId} - {logement.nomLogement}
@@ -97,6 +98,7 @@ export default function Logement() {
           <h2>Aucun logement déclaré.</h2>
         </section>
       )}
+      </div>
     </main>
   );
 }

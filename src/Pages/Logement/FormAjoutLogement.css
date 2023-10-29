@@ -7,16 +7,17 @@
     width:100%;
   }
   /* correspond aux titres pour les étapes */
-  .step-indicator li {
+  .step-indicator a {
     flex: 1;
     text-align: center;
     font-weight: bold;
     color: #333;
     position: relative;
     padding:1rem;
+    text-decoration: none;
   }
   /* correspond à la ligne de soulignement pour les étapes */
-  .step-indicator li:not(:first-child)::before {
+  .step-indicator a:not(:first-child)::before {
     content: '';
     position: absolute;
     top: 95%;
@@ -28,11 +29,11 @@
   }
   
   
-  .step-indicator li.active {
+  .step-indicator a.active {
     color: #000;
   }
   
-  .step-indicator li.active::before {
+  .step-indicator a.active::before {
     background-color: #000;
   }
   
@@ -57,6 +58,16 @@
   .step-content.prev {
     animation-name: slideInPrev;
   }
+  .btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
   
   @keyframes slideInNext {
     0% {

@@ -133,7 +133,7 @@ function LocalisationStep({ onNext, data }) {
         
       </section>
       <br />
-      <div className="form-floating mb-3">
+      <div className="form-floating mb-2">
       <input
       class="form-control"
         type="text"
@@ -171,8 +171,7 @@ function LocalisationStep({ onNext, data }) {
         )
       )}
       <br />
-      <div class="form-floating col-auto">
-      
+      <div class="form-floating mb-2">
       <input type="text" name="complement" class="form-control" id="complement"></input>
       <label for="complement">Complément d'adresse</label>
       </div>
@@ -276,10 +275,14 @@ function PiecesSurfaceStep({ onNext, data }) {
       />
       <label htmlFor="surface">Surface habitable en m² :</label>
       </div>
-      
+      <div>
+      <button type="button">
+        Précédent
+      </button>
       <button type="button" onClick={handleNext}>
         Suivant
       </button>
+      </div>
     </form>
   );
 }
@@ -483,8 +486,6 @@ function DateEntreeStep({ onValidate, data }) {
       <label htmlFor="date_entree">Date d'entrée dans le logement :</label>
       </div>
       </div>
-      <br />
-      <br />
       <label htmlFor="imagesLogement">Images de votre logement :</label>
       <ImageUploader onImagesSelected={handleImagesSelected} />
       <ImagePreview images={imagesLogement} />
@@ -561,12 +562,12 @@ export default function FormulaireLogement() {
     
     <div className="content">
       <ul className="step-indicator">
-        <li className={currentStep === 1 ? "active" : ""}>Localisation</li>
-        <li className={currentStep === 2 ? "active" : ""}>Pièces et Surface</li>
-        <li className={currentStep === 3 ? "active" : ""}>Chauffage</li>
-        <li className={currentStep === 4 ? "active" : ""}>Date d'entrée</li>
+        <a type="button" className={`btn  btn-circle ${currentStep === 1 ? "active" : ""}`}>1</a>
+        <a type="button" className={`btn  btn-circle ${currentStep === 2 ? "active" : ""}`}>2</a>
+        <a type="button" className={`btn  btn-circle ${currentStep === 3 ? "active" : ""}`}>3</a>
+        <a type="button" className={`btn  btn-circle ${currentStep === 4 ? "active" : ""}`}>4</a>
       </ul>
-
+      
       {/* boutons suivant en récupérant les données à chaque étape */}
       {currentStep === 1 && (
         <LocalisationStep onNext={onNext} data={formData.localisation} />
@@ -582,11 +583,18 @@ export default function FormulaireLogement() {
       )}
 
       {/* Bouton 'précendent' à partir de la seconde étape */}
-      {currentStep > 1 && (
-        <button type="button" onClick={() => setCurrentStep(currentStep - 1)}>
+      {currentStep > 1 && currentStep <= 4 && (
+        
+        <button type="button" onClick={() => setCurrentStep(currentStep - 1)}
+        
+        >
+          
           Précédent
         </button>
+      
       )}
+
     </div>
+    
   );
 }
