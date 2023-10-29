@@ -168,7 +168,10 @@ function LocalisationStep({ onNext, data }) {
         )
       )}
       <br />
-      
+      <div class="col-auto">
+      <label htmlFor="complement">Complément d'adresse</label>
+      <input type="text" name="complement" class="form-control" id="complement"></input>
+      </div>
       <label htmlFor="cp">Rue</label>
       <input
       class="form-control"
