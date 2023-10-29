@@ -235,8 +235,9 @@ function PiecesSurfaceStep({ onNext, data }) {
 
   return (
     <form>
-      <label htmlFor="niveaux">Nombre de niveaux :</label>
+      <div className="form-floating mb-2 col-sm-9">
       <input
+      className="form-control"
         type="number"
         id="niveaux"
         name="niveaux"
@@ -244,10 +245,12 @@ function PiecesSurfaceStep({ onNext, data }) {
         value={niveaux}
         onChange={(e) => setNiveaux(parseInt(e.target.value))}
       />
-      <br />
-      <br />
-      <label htmlFor="pieces">Nombre de pièces :</label>
+      <label for="niveaux">Nombre de niveaux :</label>
+      </div>
+      
+      <div className="form-floating mb-2 col-sm-9">
       <input
+      className="form-control"
         type="number"
         id="pieces"
         min="1"
@@ -255,18 +258,21 @@ function PiecesSurfaceStep({ onNext, data }) {
         value={pieces}
         onChange={(e) => setPieces(parseInt(e.target.value))}
       />
-      <br />
-      <br />
-      <label htmlFor="surface">Surface habitable en m² :</label>
+      <label for="pieces">Nombre de pièces :</label>
+      </div>
+      
+      <div className="form-floating mb-2 col-sm-9">
       <input
+      className="form-control"
         type="number"
         id="surface"
         name="surface"
         value={surface}
         onChange={(e) => setSurface(parseInt(e.target.value))}
       />
-      <br />
-      <br />
+      <label htmlFor="surface">Surface habitable en m² :</label>
+      </div>
+      
       <button type="button" onClick={handleNext}>
         Suivant
       </button>
@@ -291,45 +297,94 @@ function ChauffageStep({ onNext, data }) {
     <form>
       <label>Type de chauffage principal :</label>
       <br />
-      <input
-        type="radio"
-        id="gaz"
-        name="chauffage"
-        value="gaz"
-        checked={chauffage === "gaz"}
-        onChange={() => setChauffage("gaz")}
-      />
-      <label htmlFor="gaz">Gaz</label>
+      <div className="d-flex justify-content-center gap-3">
+{/* début checkbox électricité */}
+<div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input" type="checkbox" name="chauffage"
+            value="électricité"
+            checked={chauffage === "électricité"} onChange={(e) => setChauffage(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><g fill="currentColor"><path d="M12.187 10H16a.5.5 0 0 1 .325.88l-4.958 4.241l-5.024 4.743c-.39.368-1.007-.053-.807-.55L8.474 12H6a.5.5 0 0 1-.46-.697l3-7A.5.5 0 0 1 9 4h5a.5.5 0 0 1 .46.697L12.187 10Z" opacity=".2"/><path fill-rule="evenodd" d="M15 8.5h-3.813l2.273-5.303A.5.5 0 0 0 13 2.5H8a.5.5 0 0 0-.46.303l-3 7A.5.5 0 0 0 5 10.5h2.474l-2.938 7.314c-.2.497.417.918.807.55l5.024-4.743l4.958-4.241A.5.5 0 0 0 15 8.5Zm-4.571 1h3.217l-3.948 3.378l-3.385 3.195l2.365-5.887a.5.5 0 0 0-.464-.686H5.758l2.572-6h3.912L9.969 8.803a.5.5 0 0 0 .46.697Z" clip-rule="evenodd"/></g></svg>
+      </span>
+      <span class="checkbox-label">Electricité</span>
+    </span>
+  </label>
+</div>
+        {/* fin de checkbox électricité */}
+
+       {/* début checkbox gaz */}
+       <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input" type="checkbox" name="chauffage"
+            value="gaz"
+            checked={chauffage === "gaz"} onChange={(e) => setChauffage(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="m9.13 15l-.53-.77a1.85 1.85 0 0 0-.28-2.54a3.51 3.51 0 0 1-1.19-2c-1.56 2.23-.75 3.46 0 4.55l-.55.76A4.4 4.4 0 0 1 3 10.46S2.79 8.3 5.28 6.19c0 0 2.82-2.61 1.84-4.54L7.83 1a6.57 6.57 0 0 1 2.61 6.94a2.57 2.57 0 0 0 .56-.81l.87-.07c.07.12 1.84 2.93.89 5.3A4.72 4.72 0 0 1 9.13 15zm-2-6.95l.87.39a3 3 0 0 0 .92 2.48a2.64 2.64 0 0 1 1 2.8A3.241 3.241 0 0 0 11.8 12a4.87 4.87 0 0 0-.41-3.63a1.85 1.85 0 0 1-1.84.86l-.35-.68a5.31 5.31 0 0 0-.89-5.8C8.17 4.87 6 6.83 5.93 6.94C3.86 8.7 4 10.33 4 10.4a3.47 3.47 0 0 0 1.59 3.14C5 12.14 5 10.46 7.16 8.05h-.03z"/></svg>
+      </span>
+      <span class="checkbox-label">Gaz</span>
+    </span>
+  </label>
+</div>
+
+        {/* fin de checkbox gaz */}
+
+        {/* début checkbox fioul */}
+       <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input" type="checkbox" name="chauffage"
+            value="fioul"
+            checked={chauffage === "fioul"} onChange={(e) => setChauffage(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 2h3c.28 0 .53.11.71.29l2.08 2.09l.8-.79C10 3.2 10.5 3 11 3h6c.5 0 1 .2 1.41.59l1 1C19.8 5 20 5.5 20 6v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8c0-.5.2-1 .59-1.41l.79-.8L5.59 4H3V2m8 3v2h6V5h-6m.41 6l-2-2H8v1.41l2 2v3.18l-2 2V19h1.41l2-2h3.18l2 2H18v-1.41l-2-2v-3.18l2-2V9h-1.41l-2 2h-3.18m.59 2h2v2h-2v-2Z"/></svg>
+      </span>
+      <span class="checkbox-label">Fioul</span>
+    </span>
+  </label>
+</div>
+
+        {/* fin de checkbox fioul */}
+      {/* debut de checkbox pompe à chaleur  */}
+      <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input"
+    id="pompe_a_chaleur" type="checkbox" name="chauffage"
+            value="pompe à chaleur"
+            checked={chauffage === "pompe à chaleur"} onChange={(e) => setChauffage(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 18.6q1.25 0 2.125-.875T10 15.6v-6q0-.425.288-.712T11 8.6q.425 0 .713.288T12 9.6v6q0 1.25.875 2.125T15 18.6q1.25 0 2.125-.875T18 15.6v-7q0-.425.288-.713T19 7.6h1.175L19 8.75l1.4 1.425L24 6.6L20.4 3L19 4.425L20.175 5.6H19q-1.25 0-2.125.875T16 8.6v7q0 .425-.288.713T15 16.6q-.425 0-.713-.288T14 15.6v-6q0-1.25-.875-2.125T11 6.6q-1.25 0-2.125.875T8 9.6v6q0 .425-.288.713T7 16.6q-.425 0-.713-.288T6 15.6v-9H4v9q0 1.25.875 2.125T7 18.6Zm-4 3q-.825 0-1.413-.588T1 19.6v-8h22v8q0 .825-.588 1.413T21 21.6H3Z"/></svg>
+      </span>
+      <span class="checkbox-label">Pompe à chaleur</span>
+    </span>
+  </label>
+</div>
+
+       {/* fin de checkbox pompe à chaleur  */}
+     {/* debut de checkbox climatisation  */}
+     <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input"
+    id="climatisation" type="checkbox" name="chauffage"
+            value="climatisation"
+            checked={chauffage === "climatisation"} onChange={(e) => setChauffage(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 16a3 3 0 0 1-3 3m11-3a3 3 0 0 0 3 3m-7-3v4M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M7 13v-3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3"/></g></svg>
+      </span>
+      <span class="checkbox-label">Climatisation</span>
+    </span>
+  </label>
+</div>
+     {/* fin de checkbox climatisation   */}
       <br />
-      <input
-        type="radio"
-        id="fioul"
-        name="chauffage"
-        value="fioul"
-        checked={chauffage === "fioul"}
-        onChange={() => setChauffage("fioul")}
-      />
-      <label htmlFor="fioul">Fioul</label>
+     
+      </div>
       <br />
-      <input
-        type="radio"
-        id="pompe_a_chaleur"
-        name="chauffage"
-        value="pompe à chaleur"
-        checked={chauffage === "pompe à chaleur"}
-        onChange={() => setChauffage("pompe à chaleur")}
-      />
-      <label htmlFor="pompe_a_chaleur">Pompe à chaleur</label>
-      <br />
-      <input
-        type="radio"
-        id="climatisation"
-        name="chauffage"
-        value="climatisation"
-        checked={chauffage === "climatisation"}
-        onChange={() => setChauffage("climatisation")}
-      />
-      <label htmlFor="climatisation">Climatisation</label>
+      
       <br />
       <br />
       {/* placer le message d'erreur à ce niveau */}
