@@ -67,7 +67,7 @@ export default function Logement() {
                     )}
                   />
                 </div>
-              ) : <img className="img-fluid" src={houseIMGdefaut} alt="illustration d'une maison tenue sur une main" />}
+              ) : <img className="img-fluid w-50" src={houseIMGdefaut} alt="illustration d'une maison tenue sur une main" />}
               <div>
                 <h3>
                   {logement.logementId} - {logement.nomLogement}
