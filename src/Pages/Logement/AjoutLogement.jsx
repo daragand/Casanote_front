@@ -80,32 +80,57 @@ function LocalisationStep({ onNext, data }) {
       <br />
       <br />
       <section className="typeLogement">
-        <div>
-          <input
-            type="radio"
-            id="Appartement"
+        
+        {/* début checkbox apartment */}
+        <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input" type="checkbox" id="Appartement"
             name="Appartement"
             value="Appartement"
             checked={typeLogement === "Appartement"}
-            onChange={(e) => setTypeLogement(e.target.value)}
-          />
-          <label htmlFor="Appartement">Appartement</label>
-          <br />
-          <br />
-        </div>
-        <div>
-          <input
-            type="radio"
-            id="Maison"
-            name="Maison"
+            onChange={(e) => setTypeLogement(e.target.value)}/>
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+        
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="IconChangeColor" height="200" width="200"><path d="M17,11V3H7v4H3v14h8v-4h2v4h8V11H17z M7,19H5v-2h2V19z M7,15H5v-2h2V15z M7,11H5V9h2V11z M11,15H9v-2h2V15z M11,11H9V9h2 V11z M11,7H9V5h2V7z M15,15h-2v-2h2V15z M15,11h-2V9h2V11z M15,7h-2V5h2V7z M19,19h-2v-2h2V19z M19,15h-2v-2h2V15z" id="mainIconPathAttribute" fill="#737373" stroke="#804040"></path></svg>
+
+
+      </span>
+      <span class="checkbox-label">Appartement</span>
+    </span>
+  </label>
+</div>
+
+        {/* fin checkbox apartment */}
+        {/* début checkbox house */}
+        <div class="checkbox-wrapper-16">
+  <label class="checkbox-wrapper">
+    <input class="checkbox-input" type="checkbox" name="Maison"
             value="Maison"
-            checked={typeLogement === "Maison"}
-            onChange={(e) => setTypeLogement(e.target.value)}
-          />
-          <label htmlFor="Maison">Maison</label>
-          <br />
-          <br />
-        </div>
+            checked={typeLogement === "Maison"} onChange={(e) => setTypeLogement(e.target.value)} />
+    <span class="checkbox-tile">
+      <span class="checkbox-icon">
+        <svg width="450" height="450" viewBox="0 0 200 200" class="house">
+  <g>
+    <circle fill="#F4F4F9" cx="150" cy="15" r="30" />
+    <circle fill="#B8DBD9" cx="140" cy="60" r="20" />
+    <circle fill="#a1a1a1" cx="120" cy="80" r="10" />
+    <rect fill="#8C5E58" width="20" height="50" x="110" y="90" />
+    <polygon fill="#6B6570" points="100,100 150,150 50,150" />
+    <rect fill="#2CEAA3" width="200" height="10" x="0" y="190" />
+    <rect fill="#8C5E58" width="80" height="50" x="60" y="150" />
+    <rect fill="#0D1F22" width="20" height="30" x="100" y="170" />
+  </g>
+</svg>
+      </span>
+      <span class="checkbox-label">Maison</span>
+    </span>
+  </label>
+</div>
+
+        {/* fin de checkbox house */}
+        
       </section>
       <label htmlFor="adresse">Adresse</label>
       <br />
@@ -155,7 +180,8 @@ function LocalisationStep({ onNext, data }) {
         disabled
       />
       <br />
-      
+      <div className="row">
+        <div className="col-md-3 mb-3">
       <label htmlFor="cp">Code Postal</label>
       <input
       class="form-control"
@@ -166,6 +192,8 @@ function LocalisationStep({ onNext, data }) {
         value={cp}
         disabled
       />
+      </div>
+      <div className="col-md-9 mb-3">
       <label htmlFor="ville">Ville</label>
       <input
       class="form-control"
@@ -176,6 +204,8 @@ function LocalisationStep({ onNext, data }) {
         placeholder="Franconville"
         disabled
       />
+      </div>
+      </div>
       <br />
       
       <button

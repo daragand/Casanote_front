@@ -28,7 +28,7 @@ export default function Dashbord() {
       <div className="container-fluid">
         <div className="row m-5">
           {menuDash.map((card, index) => (
-            <div className="col-md-4" key={index}>
+            <div className="col-md-4 flex-grow-1" key={index}>
               <div className="card border-dark">
                 <div className="card-header bg-dark">
                   <h4 className="mb-0 text-white">{card.title}</h4>
